@@ -1,11 +1,3 @@
-/* ============================================================
-   METHOD SECTION - src/components/Method.tsx
-   ============================================================
-   Explains the 4-step Functional Patterns process.
-   Each step now includes a short video clip demonstrating
-   the technique, making it much more engaging.
-   ============================================================ */
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -16,122 +8,120 @@ const steps = [
     number: "01",
     title: "Assessment",
     description:
-      "We begin with a comprehensive biomechanical assessment. I analyze your posture, gait cycle, and movement patterns to identify the root causes of dysfunction — not just the symptoms.",
-    detail: "Standing posture analysis • Gait cycle recording • Joint mobility testing • Muscle activation patterns",
+      "Comprehensive biomechanical assessment. I analyze your posture, gait cycle, and movement patterns to identify the root causes of dysfunction.",
+    tags: ["Posture Analysis", "Gait Recording", "Joint Mobility", "Muscle Activation"],
     video: methodVideos.step1_assessment,
   },
   {
     number: "02",
     title: "Protocol Design",
     description:
-      "Based on your assessment, I design a personalized training protocol. Every exercise targets your specific dysfunctional patterns using the Functional Patterns methodology.",
-    detail: "Custom exercise selection • Progressive overload plan • Myofascial release protocol • Movement repatterning",
+      "Personalized training protocol based on your assessment. Every exercise targets your specific dysfunctional patterns.",
+    tags: ["Custom Exercises", "Progressive Overload", "Myofascial Release", "Repatterning"],
     video: methodVideos.step2_protocol,
   },
   {
     number: "03",
     title: "Training & Correction",
     description:
-      "Through hands-on coaching, we retrain your body's movement patterns. I guide you through each exercise with precise cuing to ensure proper muscle activation and biomechanical alignment.",
-    detail: "Hands-on technique correction • Real-time feedback • Neuromuscular re-education • Pattern integration",
+      "Hands-on coaching to retrain your body's movement patterns with precise cuing for proper biomechanical alignment.",
+    tags: ["Technique Correction", "Real-time Feedback", "Neuromuscular Re-ed", "Integration"],
     video: methodVideos.step3_training,
   },
   {
     number: "04",
-    title: "Integration & Results",
+    title: "Results",
     description:
-      "As your body adapts, we integrate the corrected patterns into real-world movement — walking, running, and daily activities. You'll see measurable improvements in posture, pain levels, and performance.",
-    detail: "Before/after comparison • Gait re-analysis • Long-term maintenance plan • Continued support",
+      "Corrected patterns integrated into real-world movement. Measurable improvements in posture, pain, and performance.",
+    tags: ["Before/After", "Gait Re-analysis", "Maintenance Plan", "Ongoing Support"],
     video: methodVideos.step4_results,
   },
 ];
 
-function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group flex flex-col gap-6 overflow-hidden rounded-2xl border border-card-border bg-card-bg transition-all duration-300 hover:border-primary/30 lg:flex-row"
-    >
-      {/* Video thumbnail */}
-      <div className="relative aspect-video w-full shrink-0 overflow-hidden lg:aspect-auto lg:w-72">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        >
-          <source src={step.video} type="video/mp4" />
-        </video>
-        {/* Step number overlay on the video */}
-        <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-background">
-          {step.number}
-        </div>
-      </div>
-
-      {/* Text content */}
-      <div className="flex flex-col justify-center p-6 lg:py-8">
-        <h3
-          className="text-2xl font-bold"
-          style={{ fontFamily: "var(--font-outfit)" }}
-        >
-          {step.title}
-        </h3>
-        <p className="mt-3 text-muted">{step.description}</p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {step.detail.split(" • ").map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-card-border bg-background px-3 py-1 text-xs text-muted"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Method() {
   return (
-    <section
-      id="method"
-      className="relative py-24 sm:py-32"
-      style={{ backgroundColor: "var(--section-alt)" }}
-    >
+    <section id="method" className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <span className="text-sm font-medium tracking-widest text-primary">
-            THE PROCESS
+          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+            The Process
           </span>
           <h2
-            className="mt-4 text-4xl font-bold sm:text-5xl"
+            className="mt-3 text-4xl font-extrabold sm:text-5xl"
             style={{ fontFamily: "var(--font-outfit)" }}
           >
             How It Works
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted">
-            A systematic, science-based approach to correcting your body&apos;s
-            movement patterns and eliminating pain at its source.
-          </p>
         </motion.div>
 
-        {/* Steps with video */}
-        <div className="mt-16 space-y-6">
-          {steps.map((step, index) => (
-            <StepCard key={step.number} step={step} index={index} />
-          ))}
+        {/* Alternating left/right layout */}
+        <div className="mt-20 space-y-8">
+          {steps.map((step, index) => {
+            const isReversed = index % 2 === 1;
+            return (
+              <motion.div
+                key={step.number}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7 }}
+                className={`flex flex-col overflow-hidden rounded-3xl border border-card-border bg-card-bg ${
+                  isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
+                }`}
+              >
+                {/* Video side */}
+                <div className="relative w-full lg:w-1/2">
+                  <div className="aspect-video lg:aspect-auto lg:h-full">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="h-full w-full object-cover"
+                    >
+                      <source src={step.video} type="video/mp4" />
+                    </video>
+                  </div>
+                  {/* Step number floating on the video */}
+                  <div
+                    className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-lg font-extrabold text-background"
+                    style={{ fontFamily: "var(--font-outfit)" }}
+                  >
+                    {step.number}
+                  </div>
+                </div>
+
+                {/* Text side */}
+                <div className="flex w-full flex-col justify-center p-8 sm:p-10 lg:w-1/2 lg:p-14">
+                  <h3
+                    className="text-3xl font-extrabold lg:text-4xl"
+                    style={{ fontFamily: "var(--font-outfit)" }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+                    {step.description}
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {step.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

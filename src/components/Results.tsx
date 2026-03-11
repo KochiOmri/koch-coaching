@@ -1,10 +1,3 @@
-/* ============================================================
-   RESULTS SECTION - src/components/Results.tsx
-   ============================================================
-   Shows client transformation videos and testimonials.
-   Videos autoplay on scroll with a clean card design.
-   ============================================================ */
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -16,119 +9,155 @@ const testimonials = [
     name: "David M.",
     issue: "Chronic Lower Back Pain",
     quote:
-      "After 10 years of back pain and trying everything, Koch's approach was the first thing that actually addressed WHY I was in pain. After 3 months, I'm pain-free for the first time in a decade.",
+      "After 10 years of back pain and trying everything, Koch's approach was the first thing that actually addressed WHY I was in pain. 3 months later — pain-free.",
     rating: 5,
   },
   {
     name: "Sarah K.",
     issue: "Poor Posture & Neck Pain",
     quote:
-      "I sat at a desk for 15 years and my posture was terrible. Koch didn't just give me exercises — he taught me HOW my body should actually move. The change has been incredible.",
+      "Koch didn't just give me exercises — he taught me HOW my body should actually move. The change has been incredible.",
     rating: 5,
   },
   {
     name: "Mike R.",
     issue: "Athletic Performance",
     quote:
-      "As a runner, I kept getting injured. Functional Patterns showed me my gait was completely dysfunctional. After correcting my patterns, I'm running faster with zero injuries.",
+      "Functional Patterns showed me my gait was completely dysfunctional. After correcting my patterns, I'm running faster with zero injuries.",
     rating: 5,
   },
 ];
 
 const transformationVideos = resultVideos;
 
-function ResultVideo({ video, index }: { video: (typeof transformationVideos)[0]; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group overflow-hidden rounded-2xl border border-card-border bg-card-bg transition-all duration-300 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
-    >
-      <div className="relative aspect-video overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        >
-          <source src={video.src} type="video/mp4" />
-        </video>
-      </div>
-      <div className="p-5">
-        <h3
-          className="text-lg font-bold"
-          style={{ fontFamily: "var(--font-outfit)" }}
-        >
-          {video.title}
-        </h3>
-        <p className="mt-1 text-sm text-muted">{video.description}</p>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Results() {
   return (
     <section id="results" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <span className="text-sm font-medium tracking-widest text-primary">
-            REAL RESULTS
+          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+            Real Results
           </span>
           <h2
-            className="mt-4 text-4xl font-bold sm:text-5xl"
+            className="mt-3 text-4xl font-extrabold sm:text-5xl"
             style={{ fontFamily: "var(--font-outfit)" }}
           >
             Client Transformations
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted">
-            Real people, real results. See how biomechanics-based training
-            transforms posture, eliminates pain, and improves performance.
-          </p>
         </motion.div>
 
-        {/* Transformation Videos Grid */}
-        <div className="mt-16 grid gap-6 sm:grid-cols-2">
-          {transformationVideos.map((video, index) => (
-            <ResultVideo key={video.src} video={video} index={index} />
-          ))}
+        {/* Two large cinematic video cards + two smaller ones */}
+        <div className="mt-16 grid gap-5">
+          {/* Top row: 2 large videos */}
+          <div className="grid gap-5 sm:grid-cols-2">
+            {transformationVideos.slice(0, 2).map((video, index) => (
+              <motion.div
+                key={video.src}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="group relative overflow-hidden rounded-2xl"
+              >
+                <div className="aspect-[4/3]">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  >
+                    <source src={video.src} type="video/mp4" />
+                  </video>
+                </div>
+                {/* Text overlay at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3
+                    className="text-xl font-bold text-white sm:text-2xl"
+                    style={{ fontFamily: "var(--font-outfit)" }}
+                  >
+                    {video.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-white/60">{video.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom row: full-width cinematic bar with 2 videos side by side */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid gap-5 sm:grid-cols-2"
+          >
+            {transformationVideos.slice(2, 4).map((video) => (
+              <div
+                key={video.src}
+                className="group relative overflow-hidden rounded-2xl"
+              >
+                <div className="aspect-video">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  >
+                    <source src={video.src} type="video/mp4" />
+                  </video>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <h3
+                    className="text-lg font-bold text-white"
+                    style={{ fontFamily: "var(--font-outfit)" }}
+                  >
+                    {video.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-white/60">{video.description}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Testimonial Cards */}
-        <div className="mt-20 grid gap-8 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
+        {/* Testimonials - clean minimal cards */}
+        <div className="mt-20 grid gap-6 md:grid-cols-3">
+          {testimonials.map((t, index) => (
             <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 30 }}
+              key={t.name}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="flex flex-col rounded-2xl border border-card-border bg-card-bg p-8 transition-all duration-300 hover:border-primary/30"
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="relative rounded-2xl border border-card-border bg-card-bg p-7 transition-all duration-300 hover:border-primary/20"
             >
-              <Quote size={32} className="text-primary/30" />
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
-                &ldquo;{testimonial.quote}&rdquo;
+              <Quote size={28} className="text-primary/20" />
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="mt-6 flex gap-1">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} size={14} className="fill-primary text-primary" />
-                ))}
-              </div>
-              <div className="mt-3">
-                <div className="font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>
-                  {testimonial.name}
+              <div className="mt-5 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>
+                    {t.name}
+                  </div>
+                  <div className="text-[11px] text-muted">{t.issue}</div>
                 </div>
-                <div className="text-xs text-muted">{testimonial.issue}</div>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <Star key={i} size={12} className="fill-primary text-primary" />
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}

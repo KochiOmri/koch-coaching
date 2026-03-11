@@ -1,85 +1,17 @@
-/* ============================================================
-   VIDEO SHOWCASE - src/components/VideoShowcase.tsx
-   ============================================================
-   A cinematic grid gallery of your training videos.
-   
-   Layout:
-   - Large featured video on the left
-   - Smaller videos stacked in a grid on the right
-   - Videos play on hover for an interactive feel
-   - Click to expand a video into a modal/lightbox
-   
-   This section is key for a coaching website — clients
-   want to SEE your training before they book.
-   ============================================================ */
-
 "use client";
 
 import { useState, useRef } from "react";
-// useRef is used for the lightbox video player
 import { motion } from "framer-motion";
-import { Play, X, Volume2, VolumeX } from "lucide-react";
+import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from "lucide-react";
 import { showcaseVideos } from "@/lib/video-config";
 
 const videos = showcaseVideos;
-
-/* --- VideoCard Component ---
-   Individual video tile. Plays on hover, click opens lightbox. */
-function VideoCard({
-  video,
-  className,
-  onOpen,
-}: {
-  video: (typeof videos)[0];
-  className?: string;
-  onOpen: (src: string) => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className={`group relative cursor-pointer overflow-hidden rounded-2xl ${className}`}
-      onClick={() => onOpen(video.src)}
-    >
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-      >
-        <source src={video.src} type="video/mp4" />
-      </video>
-
-      {/* Click overlay with expand icon */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/30">
-        <div className="scale-0 rounded-full bg-white/20 p-4 backdrop-blur-sm transition-transform duration-300 group-hover:scale-100">
-          <Play size={24} className="ml-0.5 text-white" fill="white" />
-        </div>
-      </div>
-
-      {/* Bottom gradient with title */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4">
-        <span className="mb-1 inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-[10px] font-medium text-primary">
-          {video.tag}
-        </span>
-        <h4
-          className="text-sm font-semibold text-white"
-          style={{ fontFamily: "var(--font-outfit)" }}
-        >
-          {video.title}
-        </h4>
-      </div>
-    </motion.div>
-  );
-}
 
 export default function VideoShowcase() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const lightboxVideoRef = useRef<HTMLVideoElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const toggleMute = () => {
     if (lightboxVideoRef.current) {
@@ -88,82 +20,128 @@ export default function VideoShowcase() {
     }
   };
 
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const amount = direction === "left" ? -400 : 400;
+      scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <section id="showcase" className="relative py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <span className="text-sm font-medium tracking-widest text-primary">
-              SEE IT IN ACTION
-            </span>
-            <h2
-              className="mt-4 text-4xl font-bold sm:text-5xl"
-              style={{ fontFamily: "var(--font-outfit)" }}
+          {/* Header with navigation arrows */}
+          <div className="flex items-end justify-between">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              Training Showcase
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted">
-              Real training sessions. Real movement correction.
-              Hover to preview, click to watch full video.
-            </p>
-          </motion.div>
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+                See It In Action
+              </span>
+              <h2
+                className="mt-3 text-4xl font-extrabold sm:text-5xl"
+                style={{ fontFamily: "var(--font-outfit)" }}
+              >
+                Training Showcase
+              </h2>
+            </motion.div>
 
-          {/* --- Video Grid ---
-              Bento-style grid layout.
-              First video is large (spans 2 rows), rest are smaller. */}
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Large featured video */}
-            {videos[0] && (
-              <VideoCard
-                video={videos[0]}
-                className="aspect-[3/4] sm:row-span-2"
-                onOpen={setLightboxSrc}
-              />
-            )}
-            {/* Smaller grid videos */}
-            {videos.slice(1).map((video) => (
-              <VideoCard
-                key={video.src}
-                video={video}
-                className="aspect-video"
-                onOpen={setLightboxSrc}
-              />
-            ))}
+            {/* Scroll arrows */}
+            <div className="hidden gap-2 sm:flex">
+              <button
+                onClick={() => scroll("left")}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-card-border transition-all hover:border-primary hover:text-primary"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-card-border transition-all hover:border-primary hover:text-primary"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
+        </div>
+
+        {/* Horizontal scrolling filmstrip - full width, bleeds past container */}
+        <div
+          ref={scrollRef}
+          className="mt-12 flex gap-5 overflow-x-auto px-4 pb-4 sm:px-6 lg:px-12"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {videos.map((video, index) => (
+            <motion.div
+              key={video.src}
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              className="group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl"
+              style={{ width: index === 0 ? "420px" : "320px" }}
+              onClick={() => setLightboxSrc(video.src)}
+            >
+              {/* Taller aspect ratio like phone/reels */}
+              <div className={index === 0 ? "aspect-[3/4]" : "aspect-[9/14]"}>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                >
+                  <source src={video.src} type="video/mp4" />
+                </video>
+              </div>
+
+              {/* Subtle gradient at bottom */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+
+              {/* Expand icon on hover */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="rounded-full bg-white/10 p-4 backdrop-blur-md">
+                  <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Bottom info */}
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <span className="inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur-sm">
+                  {video.tag}
+                </span>
+                <h4
+                  className="mt-2 text-base font-bold text-white"
+                  style={{ fontFamily: "var(--font-outfit)" }}
+                >
+                  {video.title}
+                </h4>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* --- Video Lightbox (Modal) ---
-          Opens when you click a video. Shows it large with audio controls.
-          Click outside or the X button to close. */}
+      {/* Lightbox */}
       {lightboxSrc && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4"
           onClick={() => { setLightboxSrc(null); setIsMuted(true); }}
         >
-          <div
-            className="relative w-full max-w-4xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
+          <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => { setLightboxSrc(null); setIsMuted(true); }}
-              className="absolute -top-12 right-0 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+              className="absolute -top-14 right-0 rounded-full bg-white/10 p-2.5 text-white transition-colors hover:bg-white/20"
             >
               <X size={20} />
             </button>
-
-            {/* Video player */}
             <video
               ref={lightboxVideoRef}
               autoPlay
@@ -174,11 +152,9 @@ export default function VideoShowcase() {
             >
               <source src={lightboxSrc} type="video/mp4" />
             </video>
-
-            {/* Mute/unmute toggle */}
             <button
               onClick={toggleMute}
-              className="absolute bottom-4 right-4 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+              className="absolute bottom-4 right-4 rounded-full bg-black/60 p-3 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
             >
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>

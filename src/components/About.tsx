@@ -1,10 +1,3 @@
-/* ============================================================
-   ABOUT SECTION - src/components/About.tsx
-   ============================================================
-   Introduces you as a coach with a real video of you training.
-   Left side shows a looping video, right side shows your bio.
-   ============================================================ */
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -20,73 +13,58 @@ const stats = [
 
 export default function About() {
   return (
-    <section
-      id="about"
-      className="relative py-24 sm:py-32"
-      style={{ backgroundColor: "var(--section-alt)" }}
-    >
+    <section id="about" className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Full-width cinematic video with text overlay */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative overflow-hidden rounded-3xl"
         >
-          <span className="text-sm font-medium tracking-widest text-primary">
-            ABOUT YOUR COACH
-          </span>
-          <h2
-            className="mt-4 text-4xl font-bold sm:text-5xl"
-            style={{ fontFamily: "var(--font-outfit)" }}
-          >
-            The Science of Movement
-          </h2>
+          <div className="aspect-[21/9] sm:aspect-[2.4/1]">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover"
+            >
+              <source src={aboutVideo.coachingClip} type="video/mp4" />
+            </video>
+          </div>
+          {/* Gradient overlay from left with text */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
+          <div className="absolute inset-0 flex items-center p-8 sm:p-12 lg:p-16">
+            <div className="max-w-lg">
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+                About Your Coach
+              </span>
+              <h2
+                className="mt-3 text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl"
+                style={{ fontFamily: "var(--font-outfit)" }}
+              >
+                The Science of{" "}
+                <span className="text-primary">Movement</span>
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-white/60 sm:text-base">
+                Certified Functional Patterns practitioner specializing in
+                correcting dysfunctional movement patterns through biomechanics
+                and evolutionary biology.
+              </p>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Two-column layout */}
-        <div className="mt-16 flex flex-col items-center gap-16 lg:flex-row">
-          
-          {/* Left: Video of you coaching */}
+        {/* Bio content below the video */}
+        <div className="mt-16 grid gap-12 lg:grid-cols-2 lg:items-start">
+          {/* Left: Bio text */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="w-full lg:w-1/2"
-          >
-            <div className="relative">
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-card-border">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="h-full w-full object-cover"
-                >
-                  <source src={aboutVideo.coachingClip} type="video/mp4" />
-                </video>
-              </div>
-              {/* Decorative glow */}
-              <div className="absolute -inset-4 -z-10 rounded-2xl bg-primary/5 blur-2xl" />
-              {/* Floating badge on the video */}
-              <div className="absolute -bottom-4 -right-4 rounded-xl border border-card-border bg-card-bg px-4 py-3 shadow-xl sm:bottom-6 sm:right-6">
-                <div className="text-xs font-medium text-muted">Certified</div>
-                <div className="text-lg font-bold text-primary" style={{ fontFamily: "var(--font-outfit)" }}>
-                  Functional Patterns
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right: Bio text + stats */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="w-full lg:w-1/2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
             <h3
               className="text-2xl font-bold sm:text-3xl"
@@ -95,13 +73,7 @@ export default function About() {
               Helping You Move Better,{" "}
               <span className="text-primary">Feel Better</span>
             </h3>
-
-            <div className="mt-6 space-y-4 text-muted">
-              <p>
-                As a certified Functional Patterns practitioner, I specialize in
-                correcting dysfunctional movement patterns that cause chronic
-                pain, poor posture, and limited mobility.
-              </p>
+            <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted sm:text-base">
               <p>
                 Unlike traditional training methods, Functional Patterns is
                 rooted in biomechanics and evolutionary biology. We train the way
@@ -110,34 +82,33 @@ export default function About() {
               </p>
               <p>
                 My mission is to help you understand your body at a deeper level
-                and give you the tools to move pain-free for the rest of your
-                life.
+                and give you the tools to move pain-free for the rest of your life.
               </p>
             </div>
-
-            {/* Stats grid */}
-            <div className="mt-10 grid grid-cols-2 gap-6">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="rounded-xl border border-card-border bg-card-bg p-5"
-                >
-                  <stat.icon size={24} className="text-primary" />
-                  <div
-                    className="mt-2 text-2xl font-bold"
-                    style={{ fontFamily: "var(--font-outfit)" }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div className="mt-1 text-xs text-muted">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
+
+          {/* Right: Stats grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="rounded-2xl border border-card-border bg-card-bg p-6 text-center transition-all duration-300 hover:border-primary/30"
+              >
+                <stat.icon size={28} className="mx-auto text-primary" />
+                <div
+                  className="mt-3 text-3xl font-extrabold"
+                  style={{ fontFamily: "var(--font-outfit)" }}
+                >
+                  {stat.value}
+                </div>
+                <div className="mt-1 text-xs text-muted">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
