@@ -82,29 +82,23 @@ export default function Navbar() {
       style={{ backgroundColor: "var(--nav-bg)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
 
-          {/* --- Logo Section ---
-              Clicking the logo scrolls back to the top of the page. */}
-          <a href="#" className="flex items-center gap-3">
+          {/* --- Logo Section (compact for navbar) --- */}
+          <a href="#" className="flex items-center gap-2.5">
             <Image
               src="/logo.png"
               alt="KOCH Functional Patterns Logo"
-              width={45}
-              height={45}
+              width={32}
+              height={32}
               className={isDark ? "invert-0" : "invert"}
             />
-            <div className="flex flex-col">
-              <span
-                className="text-xl font-bold tracking-[0.2em]"
-                style={{ fontFamily: "var(--font-outfit)" }}
-              >
-                KOCH
-              </span>
-              <span className="text-[10px] tracking-[0.15em] text-muted">
-                FUNCTIONAL PATTERNS
-              </span>
-            </div>
+            <span
+              className="text-base font-bold tracking-[0.2em]"
+              style={{ fontFamily: "var(--font-outfit)" }}
+            >
+              KOCH
+            </span>
           </a>
 
           {/* --- Desktop Navigation ---

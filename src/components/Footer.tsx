@@ -54,21 +54,26 @@ export default function Footer() {
           {/* --- Column 1: Brand ---
               Logo, brand name, and tagline. */}
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Image
                 src="/logo.png"
                 alt="KOCH Logo"
-                width={35}
-                height={35}
+                width={50}
+                height={50}
                 className="brightness-0 invert dark:invert-0"
                 style={{ filter: "var(--foreground) === '#f5f5f5' ? 'none' : 'invert(1)'" }}
               />
-              <span
-                className="text-lg font-bold tracking-[0.2em]"
-                style={{ fontFamily: "var(--font-outfit)" }}
-              >
-                KOCH
-              </span>
+              <div className="flex flex-col">
+                <span
+                  className="text-xl font-extrabold tracking-[0.25em]"
+                  style={{ fontFamily: "var(--font-outfit)" }}
+                >
+                  KOCH
+                </span>
+                <span className="text-[10px] tracking-[0.2em] text-muted">
+                  FUNCTIONAL PATTERNS
+                </span>
+              </div>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               Biomechanics-based coaching that addresses the root cause of
