@@ -18,41 +18,9 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Play, X, Volume2, VolumeX } from "lucide-react";
+import { showcaseVideos } from "@/lib/video-config";
 
-/* --- Video Data ---
-   Each video has a src path, title, and category tag. */
-const videos = [
-  {
-    src: "/videos/showcase-1.mp4",
-    title: "Movement Correction",
-    tag: "Training",
-  },
-  {
-    src: "/videos/showcase-2.mp4",
-    title: "Gait Pattern Work",
-    tag: "Biomechanics",
-  },
-  {
-    src: "/videos/showcase-3.mp4",
-    title: "Postural Alignment",
-    tag: "Posture",
-  },
-  {
-    src: "/videos/showcase-4.mp4",
-    title: "Functional Training",
-    tag: "Training",
-  },
-  {
-    src: "/videos/showcase-5.mp4",
-    title: "Myofascial Release",
-    tag: "Recovery",
-  },
-  {
-    src: "/videos/showcase-6.mp4",
-    title: "Core Integration",
-    tag: "Training",
-  },
-];
+const videos = showcaseVideos;
 
 /* --- VideoCard Component ---
    Individual video tile. Plays on hover, click opens lightbox. */
@@ -202,16 +170,20 @@ export default function VideoShowcase() {
               className="aspect-video"
               onOpen={setLightboxSrc}
             />
-            <VideoCard
-              video={{ src: "/videos/clip-1.mp4", title: "Quick Drill", tag: "Technique" }}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-            <VideoCard
-              video={{ src: "/videos/clip-2.mp4", title: "Movement Flow", tag: "Training" }}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
+            {videos[6] && (
+              <VideoCard
+                video={videos[6]}
+                className="aspect-video"
+                onOpen={setLightboxSrc}
+              />
+            )}
+            {videos[7] && (
+              <VideoCard
+                video={videos[7]}
+                className="aspect-video"
+                onOpen={setLightboxSrc}
+              />
+            )}
           </div>
         </div>
       </section>

@@ -20,6 +20,7 @@ import {
   LayoutDashboard,
   CalendarDays,
   Clock,
+  Film,
   Globe,
   LogOut,
   Menu,
@@ -32,6 +33,7 @@ const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Appointments", href: "/admin/appointments", icon: CalendarDays },
   { name: "Availability", href: "/admin/availability", icon: Clock },
+  { name: "Videos", href: "/admin/videos", icon: Film },
 ];
 
 export default function AdminSidebar() {

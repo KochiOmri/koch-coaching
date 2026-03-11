@@ -13,6 +13,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowDown, Play } from "lucide-react";
+import { heroVideo } from "@/lib/video-config";
 
 export default function Hero() {
   return (
@@ -31,7 +32,7 @@ export default function Hero() {
         playsInline
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/videos/hero.mp4" type="video/mp4" />
+        <source src={heroVideo.background} type="video/mp4" />
       </video>
 
       {/* --- Dark Overlay ---

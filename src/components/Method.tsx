@@ -10,6 +10,7 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import { methodVideos } from "@/lib/video-config";
 
 const steps = [
   {
@@ -18,7 +19,7 @@ const steps = [
     description:
       "We begin with a comprehensive biomechanical assessment. I analyze your posture, gait cycle, and movement patterns to identify the root causes of dysfunction — not just the symptoms.",
     detail: "Standing posture analysis • Gait cycle recording • Joint mobility testing • Muscle activation patterns",
-    video: "/videos/method-1.mp4",
+    video: methodVideos.step1_assessment,
   },
   {
     number: "02",
@@ -26,7 +27,7 @@ const steps = [
     description:
       "Based on your assessment, I design a personalized training protocol. Every exercise targets your specific dysfunctional patterns using the Functional Patterns methodology.",
     detail: "Custom exercise selection • Progressive overload plan • Myofascial release protocol • Movement repatterning",
-    video: "/videos/method-2.mp4",
+    video: methodVideos.step2_protocol,
   },
   {
     number: "03",
@@ -34,7 +35,7 @@ const steps = [
     description:
       "Through hands-on coaching, we retrain your body's movement patterns. I guide you through each exercise with precise cuing to ensure proper muscle activation and biomechanical alignment.",
     detail: "Hands-on technique correction • Real-time feedback • Neuromuscular re-education • Pattern integration",
-    video: "/videos/clip-3.mp4",
+    video: methodVideos.step3_training,
   },
   {
     number: "04",
@@ -42,7 +43,7 @@ const steps = [
     description:
       "As your body adapts, we integrate the corrected patterns into real-world movement — walking, running, and daily activities. You'll see measurable improvements in posture, pain levels, and performance.",
     detail: "Before/after comparison • Gait re-analysis • Long-term maintenance plan • Continued support",
-    video: "/videos/clip-4.mp4",
+    video: methodVideos.step4_results,
   },
 ];
 

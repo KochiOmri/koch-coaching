@@ -9,6 +9,7 @@
 
 import { motion } from "framer-motion";
 import { Award, Users, Clock, Target } from "lucide-react";
+import { aboutVideo } from "@/lib/video-config";
 
 const stats = [
   { icon: Users, value: "100+", label: "Clients Trained" },
@@ -64,7 +65,7 @@ export default function About() {
                   playsInline
                   className="h-full w-full object-cover"
                 >
-                  <source src="/videos/about.mp4" type="video/mp4" />
+                  <source src={aboutVideo.coachingClip} type="video/mp4" />
                 </video>
               </div>
               {/* Decorative glow */}

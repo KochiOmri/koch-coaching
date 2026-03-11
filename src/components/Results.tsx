@@ -10,6 +10,7 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { resultVideos } from "@/lib/video-config";
 
 const testimonials = [
   {
@@ -35,28 +36,7 @@ const testimonials = [
   },
 ];
 
-const transformationVideos = [
-  {
-    src: "/videos/result-1.mp4",
-    title: "Posture Transformation",
-    description: "12-week journey from rounded shoulders to aligned posture",
-  },
-  {
-    src: "/videos/result-2.mp4",
-    title: "Gait Correction",
-    description: "Walking pattern restructured for pain-free movement",
-  },
-  {
-    src: "/videos/result-3.mp4",
-    title: "Pain Elimination",
-    description: "From chronic back pain to full mobility restoration",
-  },
-  {
-    src: "/videos/result-4.mp4",
-    title: "Movement Quality",
-    description: "Fundamental movement patterns rebuilt from the ground up",
-  },
-];
+const transformationVideos = resultVideos;
 
 /* --- Hover-to-play video card --- */
 function ResultVideo({ video, index }: { video: (typeof transformationVideos)[0]; index: number }) {
