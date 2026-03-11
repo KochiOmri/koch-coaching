@@ -1,25 +1,24 @@
 /* ============================================================
    MAIN PAGE - src/app/page.tsx
    ============================================================
-   This is the homepage of the KOCH Functional Patterns website.
+   Homepage of the KOCH Functional Patterns website.
+   Assembles all sections in the ideal flow:
    
-   It assembles all the components in order:
-   1. Navbar (fixed at top, always visible)
-   2. Hero (full-screen landing section)
-   3. About (who you are, your story)
-   4. Services (what you offer, pricing)
-   5. Method (how Functional Patterns works)
-   6. Results (testimonials, before/after)
-   7. BookingForm (appointment scheduling)
-   8. Footer (contact info, links)
-   
-   Each component is in its own file for clean organization.
-   The page scrolls vertically through all sections.
+   1. Navbar → always visible
+   2. Hero → video background, first impression
+   3. About → your story + video of you coaching
+   4. Video Showcase → gallery of training clips
+   5. Services → what you offer
+   6. Method → 4-step process with video demos
+   7. Results → transformation videos + testimonials
+   8. Booking → appointment scheduler
+   9. Footer → contact + links
    ============================================================ */
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import VideoShowcase from "@/components/VideoShowcase";
 import Services from "@/components/Services";
 import Method from "@/components/Method";
 import Results from "@/components/Results";
@@ -29,31 +28,16 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-      {/* Navigation bar - stays fixed at the top while scrolling */}
       <Navbar />
-
-      {/* Main content - each section has its own id for anchor linking */}
       <main>
-        {/* Hero: The first impression. Full-screen with video background. */}
         <Hero />
-
-        {/* About: Your story and credentials. Builds trust. */}
         <About />
-
-        {/* Services: What you offer. Drives interest. */}
+        <VideoShowcase />
         <Services />
-
-        {/* Method: How FP works. Educates the visitor. */}
         <Method />
-
-        {/* Results: Social proof. Builds confidence to book. */}
         <Results />
-
-        {/* Booking: The conversion point. Where visitors become clients. */}
         <BookingForm />
       </main>
-
-      {/* Footer: Contact info, links, and social media. */}
       <Footer />
     </>
   );

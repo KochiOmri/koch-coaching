@@ -36,6 +36,9 @@ yarn-error.log*
 # appointment data (local dev storage)
 /data
 
+# video files (too large for git, use cloud storage in production)
+/public/videos/*.mp4
+
 # vercel
 .vercel
 

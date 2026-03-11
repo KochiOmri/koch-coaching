@@ -1,17 +1,8 @@
 /* ============================================================
    ABOUT SECTION - src/components/About.tsx
    ============================================================
-   This section introduces you (the coach) and explains what
-   Functional Patterns is.
-   
-   Layout:
-   - Left side: Image placeholder (replace with your photo)
-   - Right side: Text content with stats
-   
-   Features:
-   - Scroll-triggered animations (elements animate in as you scroll)
-   - Key statistics displayed in a grid
-   - Responsive: stacks vertically on mobile, side-by-side on desktop
+   Introduces you as a coach with a real video of you training.
+   Left side shows a looping video, right side shows your bio.
    ============================================================ */
 
 "use client";
@@ -19,9 +10,6 @@
 import { motion } from "framer-motion";
 import { Award, Users, Clock, Target } from "lucide-react";
 
-/* --- Statistics Data ---
-   These numbers appear in the stats grid below the about text.
-   Update these with your real numbers as you grow! */
 const stats = [
   { icon: Users, value: "100+", label: "Clients Trained" },
   { icon: Clock, value: "1000+", label: "Training Hours" },
@@ -37,8 +25,7 @@ export default function About() {
       style={{ backgroundColor: "var(--section-alt)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* --- Section Header ---
-            Small label + big title, centered above the content. */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -57,14 +44,10 @@ export default function About() {
           </h2>
         </motion.div>
 
-        {/* --- Two-Column Layout ---
-            On mobile: stacks vertically (flex-col)
-            On desktop (lg): sits side by side (lg:flex-row) */}
+        {/* Two-column layout */}
         <div className="mt-16 flex flex-col items-center gap-16 lg:flex-row">
           
-          {/* --- Left Column: Coach Photo ---
-              Replace the placeholder with your actual photo.
-              The border and glow effect frame the image nicely. */}
+          {/* Left: Video of you coaching */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -73,31 +56,30 @@ export default function About() {
             className="w-full lg:w-1/2"
           >
             <div className="relative">
-              {/* Image placeholder - replace src with your photo */}
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-card-border bg-card-bg">
-                {/* REPLACE THIS with an actual Image component:
-                    <Image src="/images/coach.jpg" alt="Koch - Your Coach" fill className="object-cover" />
-                    
-                    For now, showing a placeholder with text: */}
-                <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-                  <div className="text-6xl font-bold text-primary" style={{ fontFamily: "var(--font-outfit)" }}>
-                    KOCH
-                  </div>
-                  <p className="text-sm text-muted">
-                    Add your coaching photo here
-                    <br />
-                    (public/images/coach.jpg)
-                  </p>
+              <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-card-border">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-full w-full object-cover"
+                >
+                  <source src="/videos/about.mp4" type="video/mp4" />
+                </video>
+              </div>
+              {/* Decorative glow */}
+              <div className="absolute -inset-4 -z-10 rounded-2xl bg-primary/5 blur-2xl" />
+              {/* Floating badge on the video */}
+              <div className="absolute -bottom-4 -right-4 rounded-xl border border-card-border bg-card-bg px-4 py-3 shadow-xl sm:bottom-6 sm:right-6">
+                <div className="text-xs font-medium text-muted">Certified</div>
+                <div className="text-lg font-bold text-primary" style={{ fontFamily: "var(--font-outfit)" }}>
+                  Functional Patterns
                 </div>
               </div>
-              {/* Decorative glow behind the image */}
-              <div className="absolute -inset-4 -z-10 rounded-2xl bg-primary/5 blur-2xl" />
             </div>
           </motion.div>
 
-          {/* --- Right Column: About Text ---
-              Your story and what makes your coaching unique.
-              UPDATE THIS with your real bio! */}
+          {/* Right: Bio text + stats */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -132,9 +114,7 @@ export default function About() {
               </p>
             </div>
 
-            {/* --- Stats Grid ---
-                Four key numbers displayed in a 2x2 grid.
-                Each stat has an icon, number, and label. */}
+            {/* Stats grid */}
             <div className="mt-10 grid grid-cols-2 gap-6">
               {stats.map((stat, index) => (
                 <motion.div

@@ -1,18 +1,12 @@
 /* ============================================================
    HERO SECTION - src/components/Hero.tsx
    ============================================================
-   This is the first thing visitors see when they land on your site.
+   Full-screen landing section with your real video playing
+   in the background. The video autoplays, loops, and is muted
+   so it works on all browsers (browsers block autoplay with sound).
    
-   Features:
-   - Full-screen height (100vh = 100% of viewport height)
-   - Video background (autoplays, muted, loops)
-   - Dark overlay on the video so text is readable
-   - Main headline + subtitle
-   - Two CTA buttons: "Start Your Transformation" and "Learn More"
-   - Animated entrance using Framer Motion
-   
-   Note: The video is currently a placeholder. Replace the
-   YouTube embed or local video file with your actual content.
+   A dark overlay sits on top of the video so the white text
+   remains readable. The content fades in with animations.
    ============================================================ */
 
 "use client";
@@ -26,16 +20,10 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      {/* --- Video Background ---
-          This plays a looping video behind the content.
-          object-cover makes the video fill the entire section.
-          Replace the src with your actual video file later.
-          
-          For now, we use a gradient placeholder. When you have
-          your video ready, uncomment the <video> tag below and
-          add your video file to public/videos/hero.mp4 */}
-      
-      {/* UNCOMMENT THIS WHEN YOU HAVE YOUR VIDEO:
+      {/* --- Real Video Background ---
+          Your coaching video plays fullscreen behind everything.
+          object-cover = fills the entire section (may crop edges).
+          playsInline = prevents fullscreen on mobile Safari. */}
       <video
         autoPlay
         muted
@@ -45,94 +33,71 @@ export default function Hero() {
       >
         <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
-      */}
-
-      {/* --- Placeholder Background ---
-          A dynamic gradient background used until you add your video.
-          Has a subtle animation that shifts the gradient. */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary to-background">
-        {/* Animated grid pattern for visual interest */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(var(--primary) 1px, transparent 1px),
-              linear-gradient(90deg, var(--primary) 1px, transparent 1px)
-            `,
-            backgroundSize: "60px 60px",
-          }}
-        />
-        {/* Radial glow behind the main content area */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--primary)_0%,transparent_70%)] opacity-[0.08]" />
-      </div>
 
       {/* --- Dark Overlay ---
-          Semi-transparent overlay to ensure text is readable
-          over any background (video or gradient). */}
+          A gradient overlay over the video for text readability.
+          Goes from very dark at top/bottom to slightly transparent in center
+          so you can still see the video movement. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80" />
+
+      {/* Subtle animated grid pattern for extra visual texture */}
       <div
-        className="absolute inset-0"
-        style={{ backgroundColor: "var(--hero-overlay)" }}
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(212,168,67,0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212,168,67,0.5) 1px, transparent 1px)
+          `,
+          backgroundSize: "80px 80px",
+        }}
       />
 
-      {/* --- Hero Content ---
-          All the text and buttons that appear on top of the background.
-          Uses Framer Motion for a smooth fade-in + slide-up animation. */}
+      {/* --- Hero Content --- */}
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-        {/* --- Animated Badge ---
-            Small label above the headline to set context. */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-block rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium tracking-widest text-primary">
+          <span className="inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium tracking-widest text-white backdrop-blur-sm">
             BIOMECHANICS-BASED TRAINING
           </span>
         </motion.div>
 
-        {/* --- Main Headline ---
-            The biggest text on the page. This is what grabs attention.
-            Uses the Outfit font for a bold, modern look.
-            Delays animation slightly so it appears after the badge. */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-8 text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl"
+          className="mt-8 text-5xl font-bold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl"
           style={{ fontFamily: "var(--font-outfit)" }}
         >
           Move the Way
           <br />
-          <span className="text-primary">Nature Intended</span>
+          <span className="bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent">
+            Nature Intended
+          </span>
         </motion.h1>
 
-        {/* --- Subtitle ---
-            Explains what you do in one or two sentences.
-            Smaller text, slightly muted color for hierarchy. */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mx-auto mt-6 max-w-2xl text-lg text-muted sm:text-xl"
+          className="mx-auto mt-6 max-w-2xl text-lg text-white/70 sm:text-xl"
         >
           Functional Patterns coaching that addresses the root cause of
           your pain and movement dysfunction. Realign your body through
           the science of biomechanics.
         </motion.p>
 
-        {/* --- CTA Buttons ---
-            Two buttons: primary (filled) and secondary (outlined).
-            Primary leads to booking, secondary scrolls to learn more. */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          {/* Primary CTA - leads to booking section */}
           <a
             href="#book"
-            className="group flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold tracking-wide text-background transition-all duration-300 hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/20"
+            className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-8 py-4 text-sm font-semibold tracking-wide text-black transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20"
             style={{ fontFamily: "var(--font-outfit)" }}
           >
             START YOUR TRANSFORMATION
@@ -142,21 +107,18 @@ export default function Hero() {
             />
           </a>
 
-          {/* Secondary CTA - scrolls to about section */}
           <a
-            href="#about"
-            className="flex items-center gap-2 rounded-full border border-card-border px-8 py-4 text-sm font-semibold tracking-wide text-foreground transition-all duration-300 hover:border-primary hover:text-primary"
+            href="#showcase"
+            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-semibold tracking-wide text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/10"
             style={{ fontFamily: "var(--font-outfit)" }}
           >
             <Play size={16} />
-            WATCH HOW IT WORKS
+            WATCH RESULTS
           </a>
         </motion.div>
       </div>
 
-      {/* --- Scroll Indicator ---
-          Small animated arrow at the bottom telling users to scroll down.
-          Uses CSS animation for a bouncing effect. */}
+      {/* --- Scroll Indicator --- */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -165,7 +127,7 @@ export default function Hero() {
       >
         <a
           href="#about"
-          className="flex flex-col items-center gap-2 text-muted transition-colors hover:text-primary"
+          className="flex flex-col items-center gap-2 text-white/40 transition-colors hover:text-white/70"
         >
           <span className="text-xs tracking-widest">SCROLL</span>
           <ArrowDown size={16} className="animate-bounce" />

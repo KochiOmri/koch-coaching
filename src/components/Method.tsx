@@ -1,27 +1,16 @@
 /* ============================================================
    METHOD SECTION - src/components/Method.tsx
    ============================================================
-   This section explains HOW Functional Patterns works.
-   
-   It breaks down the coaching process into 4 clear steps,
-   making it easy for potential clients to understand your method.
-   
-   Layout:
-   - Numbered steps in a vertical timeline-like layout
-   - Each step has: number, title, description
-   - Alternating layout on desktop (zigzag pattern)
-   
-   This is important for building trust — clients want to
-   know what they're signing up for before booking.
+   Explains the 4-step Functional Patterns process.
+   Each step now includes a short video clip demonstrating
+   the technique, making it much more engaging.
    ============================================================ */
 
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
 
-/* --- Method Steps ---
-   The four phases of your coaching process.
-   Update these descriptions with your real methodology! */
 const steps = [
   {
     number: "01",
@@ -29,6 +18,7 @@ const steps = [
     description:
       "We begin with a comprehensive biomechanical assessment. I analyze your posture, gait cycle, and movement patterns to identify the root causes of dysfunction — not just the symptoms.",
     detail: "Standing posture analysis • Gait cycle recording • Joint mobility testing • Muscle activation patterns",
+    video: "/videos/method-1.mp4",
   },
   {
     number: "02",
@@ -36,6 +26,7 @@ const steps = [
     description:
       "Based on your assessment, I design a personalized training protocol. Every exercise targets your specific dysfunctional patterns using the Functional Patterns methodology.",
     detail: "Custom exercise selection • Progressive overload plan • Myofascial release protocol • Movement repatterning",
+    video: "/videos/method-2.mp4",
   },
   {
     number: "03",
@@ -43,6 +34,7 @@ const steps = [
     description:
       "Through hands-on coaching, we retrain your body's movement patterns. I guide you through each exercise with precise cuing to ensure proper muscle activation and biomechanical alignment.",
     detail: "Hands-on technique correction • Real-time feedback • Neuromuscular re-education • Pattern integration",
+    video: "/videos/clip-3.mp4",
   },
   {
     number: "04",
@@ -50,8 +42,69 @@ const steps = [
     description:
       "As your body adapts, we integrate the corrected patterns into real-world movement — walking, running, and daily activities. You'll see measurable improvements in posture, pain levels, and performance.",
     detail: "Before/after comparison • Gait re-analysis • Long-term maintenance plan • Continued support",
+    video: "/videos/clip-4.mp4",
   },
 ];
+
+function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="group flex flex-col gap-6 overflow-hidden rounded-2xl border border-card-border bg-card-bg transition-all duration-300 hover:border-primary/30 lg:flex-row"
+      onMouseEnter={() => videoRef.current?.play()}
+      onMouseLeave={() => {
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+        }
+      }}
+    >
+      {/* Video thumbnail */}
+      <div className="relative aspect-video w-full shrink-0 overflow-hidden lg:aspect-auto lg:w-72">
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        >
+          <source src={step.video} type="video/mp4" />
+        </video>
+        {/* Step number overlay on the video */}
+        <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-background">
+          {step.number}
+        </div>
+      </div>
+
+      {/* Text content */}
+      <div className="flex flex-col justify-center p-6 lg:py-8">
+        <h3
+          className="text-2xl font-bold"
+          style={{ fontFamily: "var(--font-outfit)" }}
+        >
+          {step.title}
+        </h3>
+        <p className="mt-3 text-muted">{step.description}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {step.detail.split(" • ").map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-card-border bg-background px-3 py-1 text-xs text-muted"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Method() {
   return (
@@ -61,7 +114,7 @@ export default function Method() {
       style={{ backgroundColor: "var(--section-alt)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* --- Section Header --- */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,54 +137,10 @@ export default function Method() {
           </p>
         </motion.div>
 
-        {/* --- Steps Timeline ---
-            Each step appears as a card with a large number on one side
-            and the content on the other. */}
-        <div className="mt-16 space-y-12">
+        {/* Steps with video */}
+        <div className="mt-16 space-y-6">
           {steps.map((step, index) => (
-            <motion.div
-              key={step.number}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group flex flex-col gap-8 rounded-2xl border border-card-border bg-card-bg p-8 transition-all duration-300 hover:border-primary/30 sm:flex-row sm:items-center sm:p-10"
-            >
-              {/* --- Step Number ---
-                  Large number displayed prominently.
-                  Uses the primary color for visual hierarchy. */}
-              <div className="shrink-0">
-                <span
-                  className="text-7xl font-bold text-primary/20 transition-colors group-hover:text-primary/40"
-                  style={{ fontFamily: "var(--font-outfit)" }}
-                >
-                  {step.number}
-                </span>
-              </div>
-
-              {/* --- Step Content ---
-                  Title, description, and detail tags. */}
-              <div>
-                <h3
-                  className="text-2xl font-bold"
-                  style={{ fontFamily: "var(--font-outfit)" }}
-                >
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-muted">{step.description}</p>
-                {/* Detail tags - small labels showing specific techniques */}
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {step.detail.split(" • ").map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-card-border bg-background px-3 py-1 text-xs text-muted"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            <StepCard key={step.number} step={step} index={index} />
           ))}
         </div>
       </div>
