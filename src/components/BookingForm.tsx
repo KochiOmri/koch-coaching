@@ -95,6 +95,7 @@ export default function BookingForm() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // 1: date, 2: time, 3: details
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
 
   /* --- Calendar Navigation ---
      Functions to move between months in the calendar. */
@@ -118,15 +119,27 @@ export default function BookingForm() {
 
   /* --- Date Selection Handler ---
      When a user clicks a date on the calendar.
-     Only allows selecting dates in the future (not past dates). */
-  const handleDateSelect = (day: number) => {
+     Only allows selecting dates in the future (not past dates).
+     Also fetches which time slots are already booked for that date. */
+  const handleDateSelect = async (day: number) => {
     const selected = new Date(currentYear, currentMonth, day);
-    // Don't allow selecting past dates or weekends (Saturday=6, Sunday=0)
     if (selected < today && selected.toDateString() !== today.toDateString()) return;
     if (selected.getDay() === 0 || selected.getDay() === 6) return;
     
     setSelectedDate(selected);
-    setCurrentStep(2); // Move to time selection
+
+    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    try {
+      const res = await fetch(`/api/appointments/slots?date=${dateStr}`);
+      if (res.ok) {
+        const slots = await res.json();
+        setBookedSlots(slots);
+      }
+    } catch {
+      setBookedSlots([]);
+    }
+
+    setCurrentStep(2);
   };
 
   /* --- Time Selection Handler --- */
@@ -136,20 +149,37 @@ export default function BookingForm() {
   };
 
   /* --- Form Submission Handler ---
-     Currently logs the data to console.
-     In Phase 2, this will send data to Supabase and Google Calendar. */
-  const handleSubmit = (e: React.FormEvent) => {
+     Sends the booking data to our API which:
+     1. Saves it to the appointments data store
+     2. Syncs it to Google Calendar (if configured)
+     3. Returns the created appointment */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Log the booking data (replace with API call in Phase 2)
-    console.log("Booking submitted:", {
-      date: selectedDate?.toISOString(),
-      time: selectedTime,
-      ...formData,
-    });
+    try {
+      const dateStr = selectedDate
+        ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+        : "";
 
-    // Show confirmation message
-    setIsSubmitted(true);
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: dateStr,
+          time: selectedTime,
+          ...formData,
+        }),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        const error = await response.json();
+        alert(error.error || "Failed to book appointment. Please try again.");
+      }
+    } catch {
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   /* --- Calendar Rendering Data ---
@@ -389,22 +419,29 @@ export default function BookingForm() {
               })}
             </h3>
             <div className="mt-6 grid grid-cols-2 gap-3">
-              {timeSlots.map((time) => (
-                <button
-                  key={time}
-                  onClick={() => handleTimeSelect(time)}
-                  className={`
-                    flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-all
-                    ${selectedTime === time
-                      ? "border-primary bg-primary text-background"
-                      : "border-card-border hover:border-primary hover:text-primary"
-                    }
-                  `}
-                >
-                  <Clock size={14} />
-                  {time}
-                </button>
-              ))}
+              {timeSlots.map((time) => {
+                const isBooked = bookedSlots.includes(time);
+                return (
+                  <button
+                    key={time}
+                    onClick={() => !isBooked && handleTimeSelect(time)}
+                    disabled={isBooked}
+                    className={`
+                      flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-all
+                      ${isBooked
+                        ? "cursor-not-allowed border-card-border opacity-30 line-through"
+                        : selectedTime === time
+                          ? "border-primary bg-primary text-background"
+                          : "border-card-border hover:border-primary hover:text-primary"
+                      }
+                    `}
+                  >
+                    <Clock size={14} />
+                    {time}
+                    {isBooked && <span className="text-xs">(Taken)</span>}
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         )}
