@@ -16,6 +16,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+// useRef is used for the lightbox video player
 import { motion } from "framer-motion";
 import { Play, X, Volume2, VolumeX } from "lucide-react";
 import { showcaseVideos } from "@/lib/video-config";
@@ -33,19 +34,6 @@ function VideoCard({
   className?: string;
   onOpen: (src: string) => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleMouseEnter = () => {
-    videoRef.current?.play();
-  };
-
-  const handleMouseLeave = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,22 +41,19 @@ function VideoCard({
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       className={`group relative cursor-pointer overflow-hidden rounded-2xl ${className}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={() => onOpen(video.src)}
     >
       <video
-        ref={videoRef}
+        autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
       >
         <source src={video.src} type="video/mp4" />
       </video>
 
-      {/* Hover overlay with play icon */}
+      {/* Click overlay with expand icon */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/30">
         <div className="scale-0 rounded-full bg-white/20 p-4 backdrop-blur-sm transition-transform duration-300 group-hover:scale-100">
           <Play size={24} className="ml-0.5 text-white" fill="white" />

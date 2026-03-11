@@ -7,7 +7,6 @@
 
 "use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { resultVideos } from "@/lib/video-config";
@@ -38,10 +37,7 @@ const testimonials = [
 
 const transformationVideos = resultVideos;
 
-/* --- Hover-to-play video card --- */
 function ResultVideo({ video, index }: { video: (typeof transformationVideos)[0]; index: number }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -49,33 +45,17 @@ function ResultVideo({ video, index }: { video: (typeof transformationVideos)[0]
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="group overflow-hidden rounded-2xl border border-card-border bg-card-bg transition-all duration-300 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
-      onMouseEnter={() => videoRef.current?.play()}
-      onMouseLeave={() => {
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-        }
-      }}
     >
       <div className="relative aspect-video overflow-hidden">
         <video
-          ref={videoRef}
+          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         >
           <source src={video.src} type="video/mp4" />
         </video>
-        {/* Play indicator */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-100 transition-opacity group-hover:opacity-0">
-          <div className="rounded-full border-2 border-white/40 p-3">
-            <svg className="ml-0.5 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
       </div>
       <div className="p-5">
         <h3

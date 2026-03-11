@@ -8,7 +8,6 @@
 
 "use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
 import { methodVideos } from "@/lib/video-config";
 
@@ -48,8 +47,6 @@ const steps = [
 ];
 
 function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -57,22 +54,14 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="group flex flex-col gap-6 overflow-hidden rounded-2xl border border-card-border bg-card-bg transition-all duration-300 hover:border-primary/30 lg:flex-row"
-      onMouseEnter={() => videoRef.current?.play()}
-      onMouseLeave={() => {
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-        }
-      }}
     >
       {/* Video thumbnail */}
       <div className="relative aspect-video w-full shrink-0 overflow-hidden lg:aspect-auto lg:w-72">
         <video
-          ref={videoRef}
+          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         >
           <source src={step.video} type="video/mp4" />

@@ -8,8 +8,8 @@
    
    Your 12 videos:
    ─────────────────
-   vid-01.mp4  (18MB)
-   vid-02.mp4  (15MB)
+   vid-01.mp4  (18MB)  ← was the belly one, moved to results
+   vid-02.mp4  (15MB)  ← now the HERO background
    vid-03.mp4  (14MB)
    vid-04.mp4  (10MB)
    vid-05.mp4  (10MB)
@@ -30,37 +30,37 @@ function v(name: string) {
 
 /* ─── HERO SECTION (background video) ──────────────── */
 export const heroVideo = {
-  background: v("vid-01.mp4"),
+  background: v("vid-02.mp4"),
 };
 
 /* ─── ABOUT SECTION (your coaching clip) ───────────── */
 export const aboutVideo = {
-  coachingClip: v("vid-02.mp4"),
+  coachingClip: v("vid-03.mp4"),
 };
 
 /* ─── VIDEO SHOWCASE GALLERY ───────────────────────── */
 export const showcaseVideos = [
-  { src: v("vid-03.mp4"), title: "Movement Correction", tag: "Training" },
-  { src: v("vid-04.mp4"), title: "Gait Pattern Work", tag: "Biomechanics" },
-  { src: v("vid-05.mp4"), title: "Postural Alignment", tag: "Posture" },
-  { src: v("vid-06.mp4"), title: "Functional Training", tag: "Training" },
-  { src: v("vid-07.mp4"), title: "Core Integration", tag: "Recovery" },
+  { src: v("vid-04.mp4"), title: "Movement Correction", tag: "Training" },
+  { src: v("vid-05.mp4"), title: "Gait Pattern Work", tag: "Biomechanics" },
+  { src: v("vid-06.mp4"), title: "Postural Alignment", tag: "Posture" },
+  { src: v("vid-07.mp4"), title: "Functional Training", tag: "Training" },
+  { src: v("vid-08.mp4"), title: "Core Integration", tag: "Recovery" },
 ];
 
 /* ─── METHOD STEPS ─────────────────────────────────── */
 export const methodVideos = {
-  step1_assessment: v("vid-08.mp4"),
-  step2_protocol: v("vid-09.mp4"),
-  step3_training: v("vid-10.mp4"),
-  step4_results: v("vid-11.mp4"),
+  step1_assessment: v("vid-09.mp4"),
+  step2_protocol: v("vid-10.mp4"),
+  step3_training: v("vid-11.mp4"),
+  step4_results: v("vid-12.mp4"),
 };
 
 /* ─── RESULTS / TRANSFORMATIONS ────────────────────── */
 export const resultVideos = [
-  { src: v("vid-06.mp4"), title: "Posture Transformation", description: "12-week journey from rounded shoulders to aligned posture" },
-  { src: v("vid-07.mp4"), title: "Gait Correction", description: "Walking pattern restructured for pain-free movement" },
-  { src: v("vid-12.mp4"), title: "Pain Elimination", description: "From chronic back pain to full mobility restoration" },
-  { src: v("vid-03.mp4"), title: "Movement Quality", description: "Fundamental movement patterns rebuilt from the ground up" },
+  { src: v("vid-01.mp4"), title: "Posture Transformation", description: "12-week journey from rounded shoulders to aligned posture" },
+  { src: v("vid-06.mp4"), title: "Gait Correction", description: "Walking pattern restructured for pain-free movement" },
+  { src: v("vid-07.mp4"), title: "Pain Elimination", description: "From chronic back pain to full mobility restoration" },
+  { src: v("vid-05.mp4"), title: "Movement Quality", description: "Fundamental movement patterns rebuilt from the ground up" },
 ];
 
 /* ─── ALL AVAILABLE VIDEOS (for the admin page) ────── */
