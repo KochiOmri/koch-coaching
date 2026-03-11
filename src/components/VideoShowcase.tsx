@@ -135,55 +135,22 @@ export default function VideoShowcase() {
               First video is large (spans 2 rows), rest are smaller. */}
           <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Large featured video */}
-            <VideoCard
-              video={videos[0]}
-              className="aspect-[3/4] sm:row-span-2"
-              onOpen={setLightboxSrc}
-            />
+            {videos[0] && (
+              <VideoCard
+                video={videos[0]}
+                className="aspect-[3/4] sm:row-span-2"
+                onOpen={setLightboxSrc}
+              />
+            )}
             {/* Smaller grid videos */}
-            <VideoCard
-              video={videos[1]}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-            <VideoCard
-              video={videos[2]}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-            <VideoCard
-              video={videos[3]}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-            <VideoCard
-              video={videos[4]}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-          </div>
-
-          {/* Second row - full width */}
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            <VideoCard
-              video={videos[5]}
-              className="aspect-video"
-              onOpen={setLightboxSrc}
-            />
-            {videos[6] && (
+            {videos.slice(1).map((video) => (
               <VideoCard
-                video={videos[6]}
+                key={video.src}
+                video={video}
                 className="aspect-video"
                 onOpen={setLightboxSrc}
               />
-            )}
-            {videos[7] && (
-              <VideoCard
-                video={videos[7]}
-                className="aspect-video"
-                onOpen={setLightboxSrc}
-              />
-            )}
+            ))}
           </div>
         </div>
       </section>

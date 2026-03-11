@@ -19,24 +19,18 @@ import { Play, Pause, Film } from "lucide-react";
 
 /* --- All videos with their current assignments --- */
 const videoAssignments = [
-  { file: "hero.mp4", section: "Hero Background", size: "18MB" },
-  { file: "about.mp4", section: "About Section", size: "5.5MB" },
-  { file: "showcase-1.mp4", section: "Showcase Gallery #1", size: "14MB" },
-  { file: "showcase-2.mp4", section: "Showcase Gallery #2", size: "14MB" },
-  { file: "showcase-3.mp4", section: "Showcase Gallery #3", size: "13MB" },
-  { file: "showcase-4.mp4", section: "Showcase Gallery #4", size: "11MB" },
-  { file: "showcase-5.mp4", section: "Showcase Gallery #5", size: "11MB" },
-  { file: "showcase-6.mp4", section: "Showcase Gallery #6", size: "9.7MB" },
-  { file: "clip-1.mp4", section: "Showcase Gallery #7", size: "4.2MB" },
-  { file: "clip-2.mp4", section: "Showcase Gallery #8", size: "3.4MB" },
-  { file: "method-1.mp4", section: "Method Step 1 (Assessment)", size: "5.2MB" },
-  { file: "method-2.mp4", section: "Method Step 2 (Protocol)", size: "5.2MB" },
-  { file: "clip-3.mp4", section: "Method Step 3 (Training)", size: "2.5MB" },
-  { file: "clip-4.mp4", section: "Method Step 4 (Results)", size: "1.9MB" },
-  { file: "result-1.mp4", section: "Results #1 (Posture)", size: "8.9MB" },
-  { file: "result-2.mp4", section: "Results #2 (Gait)", size: "8.3MB" },
-  { file: "result-3.mp4", section: "Results #3 (Pain)", size: "8.2MB" },
-  { file: "result-4.mp4", section: "Results #4 (Movement)", size: "6.9MB" },
+  { file: "vid-01.mp4", section: "Hero Background", size: "18MB" },
+  { file: "vid-02.mp4", section: "About Section", size: "15MB" },
+  { file: "vid-03.mp4", section: "Showcase #1 + Results #4", size: "14MB" },
+  { file: "vid-04.mp4", section: "Showcase #2", size: "10MB" },
+  { file: "vid-05.mp4", section: "Showcase #3", size: "10MB" },
+  { file: "vid-06.mp4", section: "Showcase #4 + Results #1", size: "8.7MB" },
+  { file: "vid-07.mp4", section: "Showcase #5 + Results #2", size: "7.9MB" },
+  { file: "vid-08.mp4", section: "Method Step 1 (Assessment)", size: "3.4MB" },
+  { file: "vid-09.mp4", section: "Method Step 2 (Protocol)", size: "3.4MB" },
+  { file: "vid-10.mp4", section: "Method Step 3 (Training)", size: "2.8MB" },
+  { file: "vid-11.mp4", section: "Method Step 4 (Results)", size: "2.1MB" },
+  { file: "vid-12.mp4", section: "Results #3 (Pain)", size: "2.0MB" },
 ];
 
 /* --- Section color coding --- */
@@ -135,7 +129,7 @@ export default function VideoManager() {
                 Video Manager
               </h1>
               <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                Preview all 18 videos and see where each one appears on the website
+                Preview all 12 videos and see where each one appears on the website
               </p>
             </div>
           </div>
