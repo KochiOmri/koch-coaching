@@ -1,3 +1,13 @@
+/**
+ * Video Manager — Admin Page
+ *
+ * Visual interface to assign videos to website slots. Slots (hero, about, showcase,
+ * method steps, results) are shown as cards with mini previews. Click a slot to
+ * select it, then click a video from the library to assign. Saves to PUT /api/video-config.
+ *
+ * The homepage reads this config server-side and passes video paths to Hero, About,
+ * VideoShowcase, Method, and Results components.
+ */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";

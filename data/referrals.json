@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ref-001",
+    "referrerId": "cli-001",
+    "referrerName": "David Mizrachi",
+    "referrerEmail": "david.m@gmail.com",
+    "referralCode": "KOCH-DM001",
+    "referredClients": [
+      { "name": "Tom Avrahami", "email": "tom.a@gmail.com", "bookedAt": "2026-02-05T11:00:00.000Z", "status": "completed" },
+      { "name": "Yael Cohen", "email": "yael.c@gmail.com", "bookedAt": "2026-03-01T14:00:00.000Z", "status": "booked" }
+    ],
+    "rewardsEarned": 1,
+    "createdAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "ref-002",
+    "referrerId": "cli-002",
+    "referrerName": "Sarah Kaufman",
+    "referrerEmail": "sarah.k@gmail.com",
+    "referralCode": "KOCH-SK002",
+    "referredClients": [
+      { "name": "Noa Shapira", "email": "noa.s@gmail.com", "bookedAt": "2026-02-18T16:00:00.000Z", "status": "completed" }
+    ],
+    "rewardsEarned": 1,
+    "createdAt": "2026-01-20T10:00:00.000Z"
+  },
+  {
+    "id": "ref-003",
+    "referrerId": "cli-004",
+    "referrerName": "Lisa Tal",
+    "referrerEmail": "lisa.t@gmail.com",
+    "referralCode": "KOCH-LT003",
+    "referredClients": [],
+    "rewardsEarned": 0,
+    "createdAt": "2026-03-05T09:00:00.000Z"
+  }
+]

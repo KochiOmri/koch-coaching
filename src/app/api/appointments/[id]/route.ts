@@ -18,9 +18,12 @@ import {
   deleteAppointment,
 } from "@/lib/appointments";
 import {
+  createCalendarEventWithMeet,
   deleteCalendarEvent,
   updateCalendarEvent,
 } from "@/lib/google-calendar";
+import { logSessionToSheet } from "@/lib/google-sheets";
+import { sendAppointmentConfirmation } from "@/lib/email";
 
 /* --- GET Handler ---
    Returns a single appointment by its ID.
@@ -65,22 +68,58 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const updated = updateAppointment(id, body);
-
-    if (!updated) {
+    const existing = getAppointmentById(id);
+    if (!existing) {
       return NextResponse.json(
         { error: "Appointment not found" },
         { status: 404 }
       );
     }
 
-    /* If the appointment has a Google Calendar event, update it too */
-    if (updated.googleEventId) {
-      if (body.status === "cancelled") {
-        await deleteCalendarEvent(updated.googleEventId);
-      } else {
-        await updateCalendarEvent(updated.googleEventId, updated);
+    const updated = updateAppointment(id, body);
+    if (!updated) {
+      return NextResponse.json(
+        { error: "Failed to update appointment" },
+        { status: 500 }
+      );
+    }
+
+    /* --- Confirmation flow: create calendar event with Meet + log to Sheets --- */
+    if (body.status === "confirmed" && existing.status !== "confirmed") {
+      if (!updated.googleEventId) {
+        const { eventId, meetLink } = await createCalendarEventWithMeet(updated);
+        if (eventId) {
+          const meetUpdates: Record<string, string> = { googleEventId: eventId };
+          if (meetLink) meetUpdates.meetLink = meetLink;
+          updateAppointment(id, meetUpdates);
+          updated.googleEventId = eventId;
+          updated.meetLink = meetLink || undefined;
+        }
       }
+
+      logSessionToSheet({
+        date: updated.date,
+        time: updated.time,
+        clientName: updated.name,
+        clientEmail: updated.email,
+        sessionType: updated.service,
+        status: "confirmed",
+        meetLink: updated.meetLink,
+        notes: updated.message,
+      });
+
+      sendAppointmentConfirmation({
+        name: updated.name,
+        email: updated.email,
+        date: updated.date,
+        time: updated.time,
+        service: updated.service,
+        meetLink: updated.meetLink,
+      });
+    } else if (body.status === "cancelled" && updated.googleEventId) {
+      await deleteCalendarEvent(updated.googleEventId);
+    } else if (updated.googleEventId) {
+      await updateCalendarEvent(updated.googleEventId, updated);
     }
 
     return NextResponse.json(updated);

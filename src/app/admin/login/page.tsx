@@ -14,7 +14,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -25,6 +25,11 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    setIsDark(!document.documentElement.classList.contains("light"));
+  }, []);
 
   /* --- Handle Login Form Submission ---
      Sends the password to the auth API.
@@ -62,11 +67,12 @@ export default function AdminLogin() {
         {/* Logo and title */}
         <div className="mb-8 text-center">
           <Image
-            src="/logo.png"
+            src={isDark ? "/logo-white.png" : "/logo-transparent.png"}
             alt="KOCH"
             width={60}
             height={60}
             className="mx-auto"
+            loading="lazy"
           />
           <h1
             className="mt-4 text-2xl font-bold tracking-wider"

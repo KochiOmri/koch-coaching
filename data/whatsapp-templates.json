@@ -1,0 +1,22 @@
+[
+  {
+    "id": "reminder",
+    "name": "Session Reminder",
+    "template": "Hi {name}! 🏋️ This is a reminder that your {service} is tomorrow at {time}. Location: KOCH Functional Patterns Studio. See you there!"
+  },
+  {
+    "id": "follow-up",
+    "name": "Post-Session Follow Up",
+    "template": "Hi {name}! 💪 How are you feeling after your session? Remember to practice the exercises we worked on. Book your next session: https://koch-fp.com/#booking"
+  },
+  {
+    "id": "confirmation",
+    "name": "Appointment Confirmation",
+    "template": "✅ Your {service} on {date} at {time} has been confirmed!"
+  },
+  {
+    "id": "welcome",
+    "name": "Welcome Message",
+    "template": "Hi {name}! 👋 Welcome to KOCH Functional Patterns. We're excited to help you move better and feel stronger. If you have any questions before your session, feel free to reach out!"
+  }
+]

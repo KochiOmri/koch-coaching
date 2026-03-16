@@ -25,7 +25,9 @@ import {
   Loader2,
   Filter,
   RefreshCw,
+  MessageCircle,
 } from "lucide-react";
+import { sendWhatsAppMessage, generateConfirmationMessage, generateReminderMessage } from "@/lib/whatsapp";
 
 interface Appointment {
   id: string;
@@ -79,15 +81,29 @@ export default function AppointmentsPage() {
         body: JSON.stringify({ status }),
       });
       if (response.ok) {
+        const apt = appointments.find((a) => a.id === id);
         setAppointments((prev) =>
           prev.map((a) => (a.id === id ? { ...a, status: status as Appointment["status"] } : a))
         );
+        if (status === "confirmed" && apt?.phone) {
+          const url = sendWhatsAppMessage(apt.phone, generateConfirmationMessage(apt));
+          if (confirm("Appointment confirmed! Send WhatsApp confirmation to " + apt.name + "?")) {
+            window.open(url, "_blank");
+          }
+        }
       }
     } catch (error) {
       console.error("Failed to update:", error);
     } finally {
       setActionLoading(null);
     }
+  };
+
+  const openWhatsApp = (apt: Appointment, type: "confirmation" | "reminder") => {
+    const msg = type === "confirmation"
+      ? generateConfirmationMessage(apt)
+      : generateReminderMessage(apt);
+    window.open(sendWhatsAppMessage(apt.phone, msg), "_blank");
   };
 
   /* --- Delete appointment --- */
@@ -265,6 +281,16 @@ export default function AppointmentsPage() {
                                   title="Cancel"
                                 >
                                   <XCircle size={16} />
+                                </button>
+                              )}
+                              {apt.phone && (
+                                <button
+                                  onClick={() => openWhatsApp(apt, apt.status === "confirmed" ? "confirmation" : "reminder")}
+                                  className="rounded-lg p-2 transition-colors hover:bg-green-500/10"
+                                  style={{ color: "#25D366" }}
+                                  title="Send WhatsApp"
+                                >
+                                  <MessageCircle size={16} />
                                 </button>
                               )}
                               <button

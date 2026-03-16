@@ -1,0 +1,50 @@
+[
+  {
+    "id": "gc-001",
+    "name": "Morning FP Foundation",
+    "description": "A beginner-friendly group class focusing on the fundamentals of Functional Patterns. Perfect for those new to FP or wanting to reinforce the basics alongside other students.",
+    "dayOfWeek": "Sunday",
+    "time": "08:00",
+    "duration": 60,
+    "maxParticipants": 8,
+    "currentParticipants": ["cli-001", "cli-003", "cli-004", "cli-005"],
+    "waitlist": [],
+    "price": 60,
+    "isActive": true,
+    "location": "Studio",
+    "meetLink": "",
+    "createdAt": "2026-01-15T08:00:00.000Z"
+  },
+  {
+    "id": "gc-002",
+    "name": "Advanced Movement Integration",
+    "description": "For experienced FP clients who have completed at least 6 individual sessions. Focuses on integrating corrective patterns into complex multi-joint movements.",
+    "dayOfWeek": "Tuesday",
+    "time": "18:00",
+    "duration": 75,
+    "maxParticipants": 6,
+    "currentParticipants": ["cli-001", "cli-002", "cli-006"],
+    "waitlist": ["cli-004"],
+    "price": 80,
+    "isActive": true,
+    "location": "Studio",
+    "meetLink": "",
+    "createdAt": "2026-02-01T08:00:00.000Z"
+  },
+  {
+    "id": "gc-003",
+    "name": "Online Gait Workshop",
+    "description": "Monthly online workshop where we analyze and correct gait patterns as a group. Bring your phone to record your walking pattern before class.",
+    "dayOfWeek": "Thursday",
+    "time": "20:00",
+    "duration": 90,
+    "maxParticipants": 12,
+    "currentParticipants": ["cli-002", "cli-005"],
+    "waitlist": [],
+    "price": 45,
+    "isActive": true,
+    "location": "Online",
+    "meetLink": "https://meet.google.com/gait-workshop",
+    "createdAt": "2026-02-15T08:00:00.000Z"
+  }
+]

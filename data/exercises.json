@@ -1,0 +1,170 @@
+[
+  {
+    "id": "ex-001",
+    "name": "Standing Decompression",
+    "description": "A foundational Functional Patterns exercise that uses gravity and intentional posture alignment to decompress the spine while standing. Focuses on creating space between vertebrae through proper stacking and breathing.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "spine",
+    "difficulty": "beginner",
+    "targetAreas": ["lower back", "spine", "posture"],
+    "duration": "60s",
+    "tags": ["FP Big 4", "standing", "decompression"],
+    "instructions": [
+      "Stand with feet hip-width apart, toes pointing forward",
+      "Shift weight slightly forward onto the balls of the feet",
+      "Engage the glutes gently to tuck the pelvis into a neutral position",
+      "Imagine a string pulling the crown of your head toward the ceiling",
+      "Breathe deeply into the ribcage, expanding laterally",
+      "Hold this aligned position for 60 seconds, focusing on creating length through the spine"
+    ],
+    "createdAt": "2025-01-15T10:00:00.000Z"
+  },
+  {
+    "id": "ex-002",
+    "name": "Hip Shift Correction",
+    "description": "Addresses lateral hip imbalances by training proper weight distribution and hip alignment. Essential for correcting asymmetrical gait patterns and reducing compensatory movement.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "hip",
+    "difficulty": "intermediate",
+    "targetAreas": ["hip", "pelvis", "glutes"],
+    "duration": "45s",
+    "tags": ["FP Big 4", "standing", "corrective"],
+    "instructions": [
+      "Stand with feet hip-width apart in a neutral stance",
+      "Place hands on the iliac crests (top of the hip bones) to monitor alignment",
+      "Slowly shift your hips to the left while keeping the ribcage stable",
+      "Return to center, then shift to the right",
+      "Identify which side feels restricted and spend more time on that direction",
+      "Perform 10 controlled shifts per side, maintaining level shoulders throughout"
+    ],
+    "createdAt": "2025-01-15T10:05:00.000Z"
+  },
+  {
+    "id": "ex-003",
+    "name": "Gait Arm Swing Drill",
+    "description": "Trains the reciprocal arm-leg coordination that defines efficient human gait. Emphasizes contralateral patterning to improve walking and running mechanics.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "gait",
+    "difficulty": "intermediate",
+    "targetAreas": ["shoulders", "core", "hip"],
+    "duration": "90s",
+    "tags": ["FP Big 4", "gait", "coordination"],
+    "instructions": [
+      "Stand in a staggered stance with your right foot forward and left foot back",
+      "Drive your left arm forward and right arm back, mimicking a walking pattern",
+      "Focus on the rotation through the thorax — the torso should rotate slightly with each swing",
+      "Keep the core engaged and avoid excessive lateral sway",
+      "Perform 15 controlled swings, then switch the lead foot",
+      "Progress by adding resistance bands or increasing speed while maintaining form"
+    ],
+    "createdAt": "2025-01-15T10:10:00.000Z"
+  },
+  {
+    "id": "ex-004",
+    "name": "Thoracic Rotation",
+    "description": "Mobilizes the thoracic spine to restore rotational capacity essential for gait, throwing, and everyday movement. Targets the mid-back region that commonly becomes stiff from sedentary lifestyles.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "spine",
+    "difficulty": "beginner",
+    "targetAreas": ["thoracic spine", "core", "shoulders"],
+    "duration": "45s",
+    "tags": ["mobility", "spine", "rotation"],
+    "instructions": [
+      "Begin in a half-kneeling position with your right knee down",
+      "Place your right hand behind your head with the elbow pointing out",
+      "Rotate your torso to the right, leading with the elbow toward the ceiling",
+      "Return slowly to the starting position with control",
+      "Perform 10 rotations, then switch sides",
+      "Focus on isolating the rotation to the thoracic spine — avoid moving the hips"
+    ],
+    "createdAt": "2025-01-15T10:15:00.000Z"
+  },
+  {
+    "id": "ex-005",
+    "name": "Single-Leg Stance",
+    "description": "Develops unilateral balance and hip stability fundamental to all single-leg activities including walking and running. Trains the stabilizers of the ankle, knee, and hip in a functional standing position.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "hip",
+    "difficulty": "beginner",
+    "targetAreas": ["hip", "ankle", "glutes", "core"],
+    "duration": "30s",
+    "tags": ["FP Big 4", "standing", "balance"],
+    "instructions": [
+      "Stand tall with feet together and arms relaxed at your sides",
+      "Shift your weight onto your left foot, grounding through the big toe, little toe, and heel",
+      "Slowly lift the right foot off the ground, bringing the knee to hip height",
+      "Hold for 30 seconds, keeping the standing hip level — avoid dropping the lifted side",
+      "Switch legs and repeat",
+      "To progress, close your eyes or perform on an unstable surface"
+    ],
+    "createdAt": "2025-01-15T10:20:00.000Z"
+  },
+  {
+    "id": "ex-006",
+    "name": "Myofascial Ball Release — Lower Back",
+    "description": "Uses a lacrosse or myofascial release ball to target tight fascia and trigger points in the lower back and QL (quadratus lumborum) region. Prepares the tissue for better movement quality.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "core",
+    "difficulty": "beginner",
+    "targetAreas": ["lower back", "QL", "fascia"],
+    "duration": "120s",
+    "tags": ["myofascial", "release", "recovery"],
+    "instructions": [
+      "Place a lacrosse ball on the floor and lie on your back with the ball positioned between your spine and the edge of the erector muscles",
+      "Start just above the pelvis on one side",
+      "Apply comfortable pressure by relaxing your body weight onto the ball",
+      "Slowly roll up and down, pausing on any tender spots for 20–30 seconds",
+      "Spend about 60 seconds per side",
+      "Avoid placing the ball directly on the spine — stay on the muscular tissue beside it"
+    ],
+    "createdAt": "2025-01-15T10:25:00.000Z"
+  },
+  {
+    "id": "ex-007",
+    "name": "Pelvic Tilt Correction",
+    "description": "Restores neutral pelvic alignment by training awareness and control of anterior and posterior pelvic tilt. Critical for addressing lower back pain and improving foundational posture.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "core",
+    "difficulty": "beginner",
+    "targetAreas": ["pelvis", "lower back", "core", "hip flexors"],
+    "duration": "60s",
+    "tags": ["FP Big 4", "corrective", "posture"],
+    "instructions": [
+      "Lie on your back with knees bent and feet flat on the floor",
+      "Place your hands on the front of your hip bones to feel the tilt",
+      "Slowly tilt the pelvis posteriorly, pressing the lower back into the floor — exhale as you flatten",
+      "Then tilt anteriorly, creating a small arch in the lower back — inhale as you arch",
+      "Find the neutral position between these two extremes",
+      "Repeat the cycle 10 times, then hold neutral for 20 seconds"
+    ],
+    "createdAt": "2025-01-15T10:30:00.000Z"
+  },
+  {
+    "id": "ex-008",
+    "name": "Cross-Body Throwing Pattern",
+    "description": "An advanced Functional Patterns movement that integrates the full kinetic chain through a rotational throwing pattern. Trains how the body naturally generates and transfers force across contralateral slings.",
+    "videoUrl": "",
+    "thumbnailUrl": "",
+    "category": "full-body",
+    "difficulty": "advanced",
+    "targetAreas": ["core", "shoulders", "hip", "thoracic spine"],
+    "duration": "60s",
+    "tags": ["FP Big 4", "throwing", "rotational", "integration"],
+    "instructions": [
+      "Stand in a staggered stance with your left foot forward, holding a light medicine ball or mimicking the motion without load",
+      "Begin with the ball at your right hip, torso rotated to the right",
+      "Initiate the throw from the ground up — drive through the right foot, rotate the hips, then the thorax",
+      "Release or simulate release across the body toward the upper left",
+      "Decelerate with control, engaging the core to stop the rotation",
+      "Perform 8 reps per side, focusing on sequential activation from feet to hands"
+    ],
+    "createdAt": "2025-01-15T10:35:00.000Z"
+  }
+]

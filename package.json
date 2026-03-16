@@ -9,13 +9,20 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.32",
+    "@vercel/analytics": "^2.0.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.35.2",
     "googleapis": "^171.4.0",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
+    "next-intl": "^4.8.3",
+    "next-mdx-remote": "^6.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "resend": "^6.9.3",
+    "sharp": "^0.34.5",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "pkg-001",
+    "name": "Starter Assessment",
+    "description": "Initial movement assessment and personalized corrective plan. Includes a full-body posture analysis and your first Functional Patterns session.",
+    "sessionCount": 1,
+    "price": 350,
+    "duration": "Single session",
+    "features": [
+      "Full posture analysis",
+      "Movement assessment",
+      "Personalized corrective plan",
+      "Exercise library access"
+    ],
+    "isActive": true,
+    "createdAt": "2025-01-10T08:00:00.000Z"
+  },
+  {
+    "id": "pkg-002",
+    "name": "Foundation Program",
+    "description": "A focused 6-session program designed to establish your movement foundations and correct the most impactful dysfunctions.",
+    "sessionCount": 6,
+    "price": 1800,
+    "duration": "6 weeks",
+    "features": [
+      "6 coaching sessions",
+      "Custom exercise program",
+      "Progress tracking",
+      "WhatsApp support",
+      "Exercise library access"
+    ],
+    "isActive": true,
+    "createdAt": "2025-01-10T08:05:00.000Z"
+  },
+  {
+    "id": "pkg-003",
+    "name": "Transformation Package",
+    "description": "The complete 12-session transformation journey. Addresses root movement dysfunctions, builds functional strength, and creates lasting change.",
+    "sessionCount": 12,
+    "price": 3200,
+    "duration": "12 weeks",
+    "features": [
+      "12 coaching sessions",
+      "Full movement assessment",
+      "Progressive exercise programs",
+      "Bi-weekly progress reviews",
+      "Priority WhatsApp support",
+      "Posture analysis before & after",
+      "Exercise library access"
+    ],
+    "isActive": true,
+    "createdAt": "2025-01-10T08:10:00.000Z"
+  }
+]

@@ -1,5 +1,26 @@
+/**
+ * VIDEO CONFIG — Which video plays where
+ *
+ * WHAT IT DOES:
+ * Manages the mapping of MP4 videos to website sections. Videos live in public/videos/
+ * (e.g. vid-01.mp4, vid-02.mp4). This config decides which video appears in each
+ * section: hero, about, showcase carousel, method steps, and results grid.
+ *
+ * ARCHITECTURE:
+ * - Data layer: reads/writes data/video-config.json (same pattern as site-content.ts)
+ * - Used by: page components that render video players (hero, about, showcase, etc.)
+ * - The JSON file is the single source of truth; no hardcoded video paths in components
+ *
+ * DEV PLAN:
+ * - Add new videos by dropping MP4s into public/videos/ and extending allVideoFiles
+ * - Admin UI can edit video-config.json to reassign videos without code changes
+ * - Consider migrating to a CMS if non-technical editors need to manage videos
+ */
+
 import fs from "fs";
 import path from "path";
+
+// ─── Types & paths ───────────────────────────────────────────────────────────
 
 export interface VideoConfig {
   hero: string;
@@ -16,6 +37,8 @@ const VIDEO_DIR = "/videos";
 function v(name: string) {
   return `${VIDEO_DIR}/${name}`;
 }
+
+// ─── Default config (used when data/video-config.json doesn't exist yet) ───────
 
 const DEFAULT_CONFIG: VideoConfig = {
   hero: v("vid-02.mp4"),
@@ -41,6 +64,8 @@ const DEFAULT_CONFIG: VideoConfig = {
   ],
 };
 
+// ─── Persistence: ensure data dir exists, bootstrap from defaults if needed ────
+
 function ensureConfig(): void {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -49,6 +74,8 @@ function ensureConfig(): void {
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(DEFAULT_CONFIG, null, 2));
   }
 }
+
+// ─── Public API ───────────────────────────────────────────────────────────────
 
 export function getVideoConfig(): VideoConfig {
   ensureConfig();
@@ -61,6 +88,7 @@ export function saveVideoConfig(config: VideoConfig): void {
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
 }
 
+// Canonical list of all MP4s in public/videos/ — used by admin UI for dropdowns
 export const allVideoFiles = [
   "vid-01.mp4", "vid-02.mp4", "vid-03.mp4", "vid-04.mp4",
   "vid-05.mp4", "vid-06.mp4", "vid-07.mp4", "vid-08.mp4",

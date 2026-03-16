@@ -21,6 +21,7 @@ import {
   getBookedSlots,
 } from "@/lib/appointments";
 import { createCalendarEvent } from "@/lib/google-calendar";
+import { sendBookingNotification, sendBookingConfirmation } from "@/lib/email";
 
 /* --- GET Handler ---
    Returns appointments. Optionally filter by date.
@@ -108,6 +109,26 @@ export async function POST(request: NextRequest) {
       updateAppointment(appointment.id, { googleEventId });
       appointment.googleEventId = googleEventId;
     }
+
+    /* Send email notifications (non-blocking) */
+    sendBookingNotification({
+      name: appointment.name,
+      email: appointment.email,
+      phone: appointment.phone,
+      date: appointment.date,
+      time: appointment.time,
+      service: appointment.service,
+      message: appointment.message,
+    });
+    sendBookingConfirmation({
+      name: appointment.name,
+      email: appointment.email,
+      phone: appointment.phone,
+      date: appointment.date,
+      time: appointment.time,
+      service: appointment.service,
+      message: appointment.message,
+    });
 
     return NextResponse.json(appointment, { status: 201 });
   } catch (error) {

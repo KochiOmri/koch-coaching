@@ -1,0 +1,94 @@
+[
+  {
+    "id": "pa-001",
+    "clientId": "cli-001",
+    "clientName": "David Mizrachi",
+    "date": "2025-12-01",
+    "viewType": "front",
+    "imageUrl": "",
+    "overallScore": 62,
+    "measurements": {
+      "headTilt": { "value": 4.2, "unit": "°", "severity": "mild" },
+      "shoulderLevelDiff": { "value": 1.8, "unit": "cm", "severity": "mild" },
+      "hipLevelDiff": { "value": 3.1, "unit": "cm", "severity": "significant" },
+      "kneeValgusLeft": { "value": 2.1, "unit": "°", "severity": "mild" },
+      "kneeValgusRight": { "value": 5.8, "unit": "°", "severity": "mild" },
+      "ankleAlignmentLeft": { "value": 1.5, "unit": "°", "severity": "good" },
+      "ankleAlignmentRight": { "value": 3.2, "unit": "°", "severity": "mild" }
+    },
+    "notes": "Initial assessment. Significant right hip drop visible. Compensatory patterns throughout kinetic chain.",
+    "createdAt": "2025-12-01T09:00:00.000Z"
+  },
+  {
+    "id": "pa-002",
+    "clientId": "cli-001",
+    "clientName": "David Mizrachi",
+    "date": "2026-03-10",
+    "viewType": "front",
+    "imageUrl": "",
+    "overallScore": 78,
+    "measurements": {
+      "headTilt": { "value": 2.1, "unit": "°", "severity": "good" },
+      "shoulderLevelDiff": { "value": 0.8, "unit": "cm", "severity": "good" },
+      "hipLevelDiff": { "value": 1.5, "unit": "cm", "severity": "mild" },
+      "kneeValgusLeft": { "value": 1.2, "unit": "°", "severity": "good" },
+      "kneeValgusRight": { "value": 3.1, "unit": "°", "severity": "mild" },
+      "ankleAlignmentLeft": { "value": 1.0, "unit": "°", "severity": "good" },
+      "ankleAlignmentRight": { "value": 1.8, "unit": "°", "severity": "good" }
+    },
+    "notes": "Re-assessment after 3 months. Significant improvement in hip level (+16 points overall). Hip drop reduced from 3.1cm to 1.5cm.",
+    "createdAt": "2026-03-10T09:00:00.000Z"
+  },
+  {
+    "id": "pa-003",
+    "clientId": "cli-002",
+    "clientName": "Sarah Kaufman",
+    "date": "2026-01-10",
+    "viewType": "side",
+    "imageUrl": "",
+    "overallScore": 55,
+    "measurements": {
+      "forwardHeadPosture": { "value": 4.5, "unit": "cm", "severity": "significant" },
+      "thoracicKyphosis": { "value": 52, "unit": "°", "severity": "significant" },
+      "lumbarLordosis": { "value": 38, "unit": "°", "severity": "mild" }
+    },
+    "notes": "Initial side view assessment. Pronounced forward head posture and thoracic kyphosis. Classic desk-worker pattern.",
+    "createdAt": "2026-01-10T11:00:00.000Z"
+  },
+  {
+    "id": "pa-004",
+    "clientId": "cli-002",
+    "clientName": "Sarah Kaufman",
+    "date": "2026-03-11",
+    "viewType": "side",
+    "imageUrl": "",
+    "overallScore": 73,
+    "measurements": {
+      "forwardHeadPosture": { "value": 2.0, "unit": "cm", "severity": "mild" },
+      "thoracicKyphosis": { "value": 42, "unit": "°", "severity": "mild" },
+      "lumbarLordosis": { "value": 34, "unit": "°", "severity": "good" }
+    },
+    "notes": "Week 6 re-assessment. Impressive improvement — forward head posture reduced by 2.5cm. Thoracic kyphosis improving. Score up 18 points.",
+    "createdAt": "2026-03-11T11:00:00.000Z"
+  },
+  {
+    "id": "pa-005",
+    "clientId": "cli-004",
+    "clientName": "Lisa Tal",
+    "date": "2026-02-01",
+    "viewType": "front",
+    "imageUrl": "",
+    "overallScore": 58,
+    "measurements": {
+      "headTilt": { "value": 3.5, "unit": "°", "severity": "mild" },
+      "shoulderLevelDiff": { "value": 2.4, "unit": "cm", "severity": "mild" },
+      "hipLevelDiff": { "value": 2.8, "unit": "cm", "severity": "significant" },
+      "kneeValgusLeft": { "value": 3.2, "unit": "°", "severity": "mild" },
+      "kneeValgusRight": { "value": 1.8, "unit": "°", "severity": "good" },
+      "ankleAlignmentLeft": { "value": 4.1, "unit": "°", "severity": "significant" },
+      "ankleAlignmentRight": { "value": 1.2, "unit": "°", "severity": "good" }
+    },
+    "notes": "Initial assessment. Left-side dominant dysfunction pattern: left hip elevated, left ankle pronation, compensatory right shoulder elevation. This is driving the right shoulder pain.",
+    "createdAt": "2026-02-01T10:00:00.000Z"
+  }
+]

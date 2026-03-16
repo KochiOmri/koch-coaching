@@ -1,0 +1,62 @@
+{
+  "cli-001": {
+    "painScores": [
+      { "date": "2025-12-01", "score": 8 },
+      { "date": "2025-12-15", "score": 7 },
+      { "date": "2026-01-05", "score": 6 },
+      { "date": "2026-01-20", "score": 5 },
+      { "date": "2026-02-10", "score": 5 },
+      { "date": "2026-02-25", "score": 4 },
+      { "date": "2026-03-10", "score": 3 }
+    ],
+    "notes": [
+      { "date": "2025-12-01", "text": "Initial assessment: chronic lower back pain 10 years. Gait shows right hip drop. Limited ankle dorsiflexion left side." },
+      { "date": "2026-01-05", "text": "Hip drop improving. Patient reports being able to sit for 2 hours without pain (was 30 min)." },
+      { "date": "2026-02-25", "text": "Gait re-analysis: hip drop reduced from 3cm to 1.5cm. Walking 30 min pain-free now." },
+      { "date": "2026-03-10", "text": "Pain at 3/10. Pelvic tilt correction added. Great compliance with homework." }
+    ],
+    "photos": [
+      { "date": "2025-12-01", "beforeUrl": "", "afterUrl": "" }
+    ]
+  },
+  "cli-002": {
+    "painScores": [
+      { "date": "2026-01-10", "score": 7 },
+      { "date": "2026-01-24", "score": 6 },
+      { "date": "2026-02-07", "score": 5 },
+      { "date": "2026-02-21", "score": 4 },
+      { "date": "2026-03-04", "score": 3 },
+      { "date": "2026-03-11", "score": 2 }
+    ],
+    "notes": [
+      { "date": "2026-01-10", "text": "Initial assessment: Forward head posture 4.5cm anterior. Thoracic kyphosis significant. Neck pain 7/10." },
+      { "date": "2026-02-07", "text": "Week 4: Visible posture improvement. Colleague at work noticed she's 'standing taller'." },
+      { "date": "2026-03-11", "text": "Week 6: Forward head reduced to 2cm. Arm swing connecting with rotation. Neck pain 2/10." }
+    ],
+    "photos": []
+  },
+  "cli-004": {
+    "painScores": [
+      { "date": "2026-02-01", "score": 8 },
+      { "date": "2026-02-15", "score": 7 },
+      { "date": "2026-03-02", "score": 5 }
+    ],
+    "notes": [
+      { "date": "2026-02-01", "text": "Assessment: Right shoulder pain connected to left hip external rotation. Classic cross-body compensation pattern." },
+      { "date": "2026-03-02", "text": "Shoulder pain dropped from 8 to 5 after hip correction work. She's amazed the shoulder is improving from hip exercises." }
+    ],
+    "photos": []
+  },
+  "cli-006": {
+    "painScores": [
+      { "date": "2026-02-20", "score": 6 },
+      { "date": "2026-03-01", "score": 5 },
+      { "date": "2026-03-08", "score": 4 }
+    ],
+    "notes": [
+      { "date": "2026-02-20", "text": "Post-pregnancy assessment: Diastasis recti 3.5 finger widths. Core disconnected. Posture collapsed." },
+      { "date": "2026-03-08", "text": "Week 2: Diastasis down to 2.5 finger widths. Breathing patterns improving. Feels 'more solid' in daily life." }
+    ],
+    "photos": []
+  }
+}

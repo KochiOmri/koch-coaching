@@ -1,0 +1,79 @@
+[
+  {
+    "id": "sn-001",
+    "clientId": "cli-001",
+    "clientName": "David Mizrachi",
+    "date": "2026-02-25",
+    "sessionType": "1-on-1 Coaching",
+    "notes": "Performed full gait cycle analysis. David shows significant right hip drop during walking — approximately 3cm difference. Left ankle dorsiflexion limited. Started with hip shift correction drills and myofascial release on the QL. He responded well to the standing decompression exercises. Lower back pain reported at 5/10 today, down from 8/10 at first session.",
+    "painScore": 5,
+    "homework": ["Standing Decompression 2x daily", "Hip Shift Drill 3x10", "Tennis ball QL release"],
+    "createdAt": "2026-02-25T10:30:00.000Z"
+  },
+  {
+    "id": "sn-002",
+    "clientId": "cli-001",
+    "clientName": "David Mizrachi",
+    "date": "2026-03-10",
+    "sessionType": "1-on-1 Coaching",
+    "notes": "Excellent progress. Hip drop reduced to ~1.5cm. Lower back pain now at 3/10. David has been consistent with homework. Today we focused on integrating the corrected hip pattern into walking. Added pelvic tilt correction to the protocol. He can now walk 30 minutes without pain — was limited to 10 minutes at start.",
+    "painScore": 3,
+    "homework": ["Pelvic Tilt Correction 3x15", "Walking practice 30min", "Continue QL release"],
+    "createdAt": "2026-03-10T10:00:00.000Z"
+  },
+  {
+    "id": "sn-003",
+    "clientId": "cli-002",
+    "clientName": "Sarah Kaufman",
+    "date": "2026-03-04",
+    "sessionType": "Intensive Program",
+    "notes": "Week 5 of 12-week program. Thoracic kyphosis has visibly improved — her posture in standing is noticeably more upright. Neck pain down from 7/10 to 3/10. Today focused on thoracic rotation quality and cross-body throwing pattern integration. She's struggling a bit with the arm swing drill — needs more proprioceptive cuing on the contralateral connection.",
+    "painScore": 3,
+    "homework": ["Thoracic Rotation 3x10 each side", "Arm Swing Drill with mirror", "Foam roller thoracic extension"],
+    "createdAt": "2026-03-04T12:00:00.000Z"
+  },
+  {
+    "id": "sn-004",
+    "clientId": "cli-002",
+    "clientName": "Sarah Kaufman",
+    "date": "2026-03-11",
+    "sessionType": "Intensive Program",
+    "notes": "Week 6. Big breakthrough today — Sarah's arm swing is now connecting properly with contralateral rotation. Neck pain at 2/10. Forward head posture measured at 2cm anterior to plumb line, down from 4.5cm at assessment. Added single-leg stance work to challenge balance and integrate corrections.",
+    "painScore": 2,
+    "homework": ["Single-Leg Stance 3x30s each side", "Walking 45min with focus on arm swing", "Continue thoracic work"],
+    "createdAt": "2026-03-11T12:00:00.000Z"
+  },
+  {
+    "id": "sn-005",
+    "clientId": "cli-003",
+    "clientName": "Mike Rosenberg",
+    "date": "2026-03-12",
+    "sessionType": "Free Consultation",
+    "notes": "Initial consultation. Mike is a recreational runner (30km/week) with chronic right knee pain (6 months). Observation: significant left hip internal rotation deficit, compensatory right knee valgus during single-leg stance. Gait shows overstride with heel strike. Recommended 12-week Transformation Package. He's motivated and ready to start.",
+    "painScore": 6,
+    "homework": ["Icing 15min after runs", "Stop running until next session", "Standing Decompression 2x daily"],
+    "createdAt": "2026-03-12T15:00:00.000Z"
+  },
+  {
+    "id": "sn-006",
+    "clientId": "cli-004",
+    "clientName": "Lisa Tal",
+    "date": "2026-03-02",
+    "sessionType": "1-on-1 Coaching",
+    "notes": "First session after assessment. Lisa's right shoulder pain (8/10) appears connected to contralateral hip dysfunction — left hip is externally rotated, creating compensatory thoracic rotation that loads the right shoulder. Started with hip correction work rather than shoulder-focused exercises. She was surprised but immediately felt relief after hip mobilization.",
+    "painScore": 8,
+    "homework": ["Hip Shift Correction 3x12", "Myofascial ball on left hip flexor", "Avoid overhead reaching"],
+    "createdAt": "2026-03-02T15:00:00.000Z"
+  },
+  {
+    "id": "sn-007",
+    "clientId": "cli-006",
+    "clientName": "Noa Shapira",
+    "date": "2026-03-08",
+    "sessionType": "Intensive Program",
+    "notes": "Week 2 of post-pregnancy recovery program. Diastasis recti measured at 2.5 finger widths — improving from 3.5 at assessment. Core activation is connecting better. Today focused on breathing patterns and low-load core integration. Noa reports feeling 'more solid' during daily activities. Posture improving but still reverting to old patterns when tired.",
+    "painScore": 4,
+    "homework": ["Breathing drills 5min 3x daily", "Core activation in standing", "Walking 20min with focus on posture"],
+    "createdAt": "2026-03-08T17:00:00.000Z"
+  }
+]

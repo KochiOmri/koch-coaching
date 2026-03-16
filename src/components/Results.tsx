@@ -1,62 +1,161 @@
+/**
+ * Results — Client transformations with video cards and testimonial carousel.
+ *
+ * Top: 4 video cards in a grid (src, title, description per video). Below: testimonial carousel
+ * with prev/next buttons and dot indicators. Testimonials show quote, avatar, name, issue, and stars.
+ *
+ * CMS/Architecture: Receives `videos` (array of ResultVideo) and `testimonials` from CMS.
+ * Video metadata and testimonial text are fully CMS-driven.
+ */
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import LazyVideo from "./LazyVideo";
 
-interface ResultVideo { src: string; title: string; description: string }
+interface ResultVideo {
+  src: string;
+  title: string;
+  description: string;
+}
 
-const testimonials = [
-  { name: "David M.", issue: "Chronic Lower Back Pain", quote: "After 10 years of back pain and trying everything, Koch's approach was the first thing that actually addressed WHY I was in pain. 3 months later — pain-free.", rating: 5 },
-  { name: "Sarah K.", issue: "Poor Posture & Neck Pain", quote: "Koch didn't just give me exercises — he taught me HOW my body should actually move. The change has been incredible.", rating: 5 },
-  { name: "Mike R.", issue: "Athletic Performance", quote: "Functional Patterns showed me my gait was completely dysfunctional. After correcting my patterns, I'm running faster with zero injuries.", rating: 5 },
-];
+interface Testimonial {
+  name: string;
+  initials: string;
+  issue: string;
+  quote: string;
+  rating: number;
+  color: string;
+}
 
-export default function Results({ videos }: { videos: ResultVideo[] }) {
+export default function Results({ videos, testimonials }: { videos: ResultVideo[]; testimonials: Testimonial[] }) {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const next = () => setActiveTestimonial((p) => (p + 1) % testimonials.length);
+  const prev = () => setActiveTestimonial((p) => (p - 1 + testimonials.length) % testimonials.length);
+
   return (
     <section id="results" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Real Results</span>
-          <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>Client Transformations</h2>
+          <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>
+            Client Transformations
+          </h2>
         </motion.div>
-        <div className="mt-16 grid gap-5">
-          <div className="grid gap-5 sm:grid-cols-2">
-            {videos.slice(0, 2).map((video, index) => (
-              <motion.div key={video.src + index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.1 }} className="group relative overflow-hidden rounded-2xl">
-                <div className="aspect-[4/3]"><video autoPlay muted loop playsInline className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"><source src={video.src} type="video/mp4" /></video></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-xl font-bold text-white sm:text-2xl" style={{ fontFamily: "var(--font-outfit)" }}>{video.title}</h3>
-                  <p className="mt-1 text-sm text-white/60">{video.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }} className="grid gap-5 sm:grid-cols-2">
-            {videos.slice(2, 4).map((video, index) => (
-              <div key={video.src + index} className="group relative overflow-hidden rounded-2xl">
-                <div className="aspect-video"><video autoPlay muted loop playsInline className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"><source src={video.src} type="video/mp4" /></video></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-outfit)" }}>{video.title}</h3>
-                  <p className="mt-1 text-xs text-white/60">{video.description}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-        <div className="mt-20 grid gap-6 md:grid-cols-3">
-          {testimonials.map((t, index) => (
-            <motion.div key={t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }} className="relative rounded-2xl border border-card-border bg-card-bg p-7 transition-all duration-300 hover:border-primary/20">
-              <Quote size={28} className="text-primary/20" />
-              <p className="mt-4 text-sm leading-relaxed text-muted">&ldquo;{t.quote}&rdquo;</p>
-              <div className="mt-5 flex items-center justify-between">
-                <div><div className="text-sm font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>{t.name}</div><div className="text-[11px] text-muted">{t.issue}</div></div>
-                <div className="flex gap-0.5">{Array.from({ length: t.rating }).map((_, i) => (<Star key={i} size={12} className="fill-primary text-primary" />))}</div>
+
+        <div className="mt-16 grid grid-cols-2 gap-5 sm:grid-cols-4">
+          {videos.slice(0, 4).map((video, index) => (
+            <motion.div
+              key={video.src + index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="group relative overflow-hidden rounded-2xl border border-card-border bg-black"
+            >
+              <LazyVideo
+                src={video.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full"
+                style={{ aspectRatio: "9/16" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                <h3 className="text-sm font-bold text-white sm:text-lg" style={{ fontFamily: "var(--font-outfit)" }}>
+                  {video.title}
+                </h3>
+                <p className="mt-1 text-[11px] text-white/60 sm:text-xs">{video.description}</p>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {testimonials.length > 0 && (
+          <div className="mt-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Testimonials</span>
+              <h3 className="mt-3 text-2xl font-extrabold sm:text-3xl" style={{ fontFamily: "var(--font-outfit)" }}>
+                What Clients Say
+              </h3>
+            </motion.div>
+
+            <div className="relative mx-auto mt-12 max-w-2xl">
+              <div className="overflow-hidden rounded-3xl border border-card-border bg-card-bg p-8 sm:p-12">
+                <Quote size={40} className="text-primary/20" />
+                <p
+                  className="mt-6 text-lg leading-relaxed sm:text-xl"
+                  style={{ fontFamily: "var(--font-outfit)" }}
+                >
+                  &ldquo;{testimonials[activeTestimonial].quote}&rdquo;
+                </p>
+                <div className="mt-8 flex items-center gap-4">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white"
+                    style={{ backgroundColor: testimonials[activeTestimonial].color }}
+                  >
+                    {testimonials[activeTestimonial].initials}
+                  </div>
+                  <div>
+                    <div className="font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>
+                      {testimonials[activeTestimonial].name}
+                    </div>
+                    <div className="text-sm text-muted">{testimonials[activeTestimonial].issue}</div>
+                  </div>
+                  <div className="ml-auto flex gap-0.5">
+                    {Array.from({ length: testimonials[activeTestimonial].rating }).map((_, i) => (
+                      <Star key={i} size={16} className="fill-primary text-primary" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <button
+                  onClick={prev}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-card-border transition-all hover:border-primary hover:text-primary"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="flex gap-2">
+                  {testimonials.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveTestimonial(i)}
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: i === activeTestimonial ? "24px" : "8px",
+                        backgroundColor: i === activeTestimonial ? "var(--primary)" : "var(--card-border)",
+                      }}
+                    />
+                  ))}
+                </div>
+                <button
+                  onClick={next}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-card-border transition-all hover:border-primary hover:text-primary"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

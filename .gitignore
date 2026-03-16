@@ -33,11 +33,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# appointment data (local dev storage)
-/data
-
-# video files (too large for git, use cloud storage in production)
-/public/videos/*.mp4
+# env files keep out of version control
+# Data and videos are included for demo deployment
 
 # vercel
 .vercel

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "prog-001",
+    "title": "Lower Back Restoration Protocol",
+    "description": "A targeted 8-week program focusing on correcting lower back dysfunction through gait correction, hip mobility, and core integration using the FP Big 4 framework.",
+    "duration": "8 weeks",
+    "exercises": [
+      { "id": "pe-1", "name": "Standing Decompression", "description": "Spinal decompression through proper stacking and breathing", "sets": 3, "reps": 60, "notes": "Hold 60 seconds each set. Focus on crown-of-head pull." },
+      { "id": "pe-2", "name": "Hip Shift Correction", "description": "Corrects lateral hip imbalance in standing and walking", "sets": 3, "reps": 12, "notes": "Slow and controlled. Feel the weight shift through the foot." },
+      { "id": "pe-3", "name": "Pelvic Tilt Correction", "description": "Addresses anterior pelvic tilt through glute and core activation", "sets": 3, "reps": 15, "notes": "Breathe out on the tilt. Don't over-tuck." },
+      { "id": "pe-4", "name": "Myofascial Ball Release", "description": "Tennis ball release for QL and erector spinae", "sets": 2, "reps": 90, "notes": "90 seconds each side. Find the tender spots." }
+    ],
+    "createdBy": "admin",
+    "assignedTo": ["cli-001", "cli-004"],
+    "createdAt": "2025-12-01T08:00:00.000Z"
+  },
+  {
+    "id": "prog-002",
+    "title": "Posture & Neck Pain Recovery",
+    "description": "A 12-week intensive program for correcting forward head posture, thoracic kyphosis, and associated neck pain through FP methodologies.",
+    "duration": "12 weeks",
+    "exercises": [
+      { "id": "pe-5", "name": "Thoracic Rotation", "description": "Mobilize the thoracic spine through controlled rotation", "sets": 3, "reps": 10, "notes": "10 reps each side. Keep hips facing forward." },
+      { "id": "pe-6", "name": "Standing Decompression", "description": "Cervical-focused decompression variant", "sets": 3, "reps": 45, "notes": "Focus on neck lengthening. Chin slightly tucked." },
+      { "id": "pe-7", "name": "Cross-Body Throwing Pattern", "description": "Integrate upper body through contralateral movement", "sets": 3, "reps": 8, "notes": "Light resistance. Focus on rotation quality." },
+      { "id": "pe-8", "name": "Gait Arm Swing Drill", "description": "Correct arm swing pattern for better upper body mechanics", "sets": 3, "reps": 20, "notes": "Exaggerate the swing. Feel the cross-body connection." }
+    ],
+    "createdBy": "admin",
+    "assignedTo": ["cli-002", "cli-006"],
+    "createdAt": "2026-01-05T08:00:00.000Z"
+  }
+]

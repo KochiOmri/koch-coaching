@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "about": "About",
+    "services": "Services",
+    "method": "Method",
+    "methodology": "Methodology",
+    "results": "Results",
+    "blog": "Blog",
+    "contact": "Contact",
+    "bookSession": "Book Session"
+  },
+  "hero": {
+    "bookFreeSession": "Book Free Session",
+    "watchResults": "Watch Results",
+    "scroll": "SCROLL"
+  },
+  "about": {
+    "tagline": "About Your Coach"
+  },
+  "fpContent": {
+    "evidenceTitle": "Evidence-Based Results"
+  },
+  "services": {
+    "bookNow": "Book Now",
+    "mostPopular": "MOST POPULAR",
+    "freeConsultation": "Free Consultation",
+    "perSession": "per session",
+    "included": "Included"
+  },
+  "method": {
+    "tagline": "The Process"
+  },
+  "results": {
+    "tagline": "RESULTS",
+    "headline": "Real Transformations",
+    "subheadline": "Client testimonials and success stories"
+  },
+  "booking": {
+    "title": "Book Your Free Consultation",
+    "subtitle": "Pick a date and time that works for you. The first session is completely free.",
+    "nameLabel": "Full Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "Your phone number",
+    "dateLabel": "Preferred Date",
+    "timeLabel": "Preferred Time",
+    "messageLabel": "Message (optional)",
+    "messagePlaceholder": "Tell me about yourself and what you'd like to improve...",
+    "submitButton": "Book Session",
+    "submitting": "Submitting...",
+    "successTitle": "Session Booked!",
+    "successMessage": "A confirmation email has been sent to you. See you soon!",
+    "bookAnother": "Book Another Session"
+  },
+  "footer": {
+    "quickLinks": "QUICK LINKS",
+    "contact": "CONTACT",
+    "trainingHours": "TRAINING HOURS",
+    "newsletter": "NEWSLETTER",
+    "newsletterPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "allRightsReserved": "All rights reserved",
+    "clientPortal": "Client Portal",
+    "about": "About",
+    "services": "Services",
+    "method": "Method",
+    "results": "Results",
+    "bookSession": "Book Session"
+  },
+  "intake": {
+    "title": "Health Intake Form",
+    "subtitle": "Please fill out before your first session"
+  },
+  "videoShowcase": {
+    "tagline": "TRAINING GALLERY",
+    "headline": "Watch the Training"
+  },
+  "beforeAfter": {
+    "tagline": "PROGRESS COMPARISON",
+    "headline": "Before & After",
+    "before": "Before",
+    "after": "After"
+  },
+  "instagram": {
+    "tagline": "FOLLOW US",
+    "headline": "Instagram",
+    "followUs": "Follow Us"
+  },
+  "whatsapp": {
+    "tooltip": "Got questions? Chat with us"
+  }
+}

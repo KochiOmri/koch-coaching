@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "about": "אודות",
+    "services": "שירותים",
+    "method": "השיטה",
+    "methodology": "המתודולוגיה",
+    "results": "תוצאות",
+    "blog": "בלוג",
+    "contact": "צור קשר",
+    "bookSession": "קבע פגישה"
+  },
+  "hero": {
+    "bookFreeSession": "קבע פגישה חינם",
+    "watchResults": "צפה בתוצאות",
+    "scroll": "גלול"
+  },
+  "about": {
+    "tagline": "על המאמן שלך"
+  },
+  "fpContent": {
+    "evidenceTitle": "תוצאות מבוססות ראיות"
+  },
+  "services": {
+    "bookNow": "הזמן עכשיו",
+    "mostPopular": "הכי פופולרי",
+    "freeConsultation": "ייעוץ חינם",
+    "perSession": "לאימון",
+    "included": "כלול"
+  },
+  "method": {
+    "tagline": "התהליך"
+  },
+  "results": {
+    "tagline": "תוצאות",
+    "headline": "טרנספורמציות אמיתיות",
+    "subheadline": "עדויות וסיפורי הצלחה של לקוחות"
+  },
+  "booking": {
+    "title": "קבעו ייעוץ חינם",
+    "subtitle": "בחרו תאריך ושעה שנוחים לכם. הפגישה הראשונה היא חינם.",
+    "nameLabel": "שם מלא",
+    "namePlaceholder": "השם שלכם",
+    "emailLabel": "אימייל",
+    "emailPlaceholder": "you@example.com",
+    "phoneLabel": "טלפון",
+    "phonePlaceholder": "מספר הטלפון שלכם",
+    "dateLabel": "תאריך מועדף",
+    "timeLabel": "שעה מועדפת",
+    "messageLabel": "הודעה (לא חובה)",
+    "messagePlaceholder": "ספרו לי על עצמכם ועל מה שאתם רוצים לשפר...",
+    "submitButton": "קבע פגישה",
+    "submitting": "שולח...",
+    "successTitle": "!הפגישה נקבעה",
+    "successMessage": "נשלח אליכם אישור למייל. נתראה בקרוב!",
+    "bookAnother": "קבע פגישה נוספת"
+  },
+  "footer": {
+    "quickLinks": "קישורים מהירים",
+    "contact": "צור קשר",
+    "trainingHours": "שעות אימון",
+    "newsletter": "הרשמה לעדכונים",
+    "newsletterPlaceholder": "הכניסו אימייל",
+    "subscribe": "הרשמה",
+    "privacyPolicy": "מדיניות פרטיות",
+    "termsOfService": "תנאי שימוש",
+    "allRightsReserved": "כל הזכויות שמורות",
+    "clientPortal": "פורטל לקוחות",
+    "about": "אודות",
+    "services": "שירותים",
+    "method": "השיטה",
+    "results": "תוצאות",
+    "bookSession": "קבע פגישה"
+  },
+  "intake": {
+    "title": "שאלון בריאות ראשוני",
+    "subtitle": "נא למלא את השאלון לפני הפגישה הראשונה"
+  },
+  "videoShowcase": {
+    "tagline": "גלריית אימונים",
+    "headline": "צפו באימונים"
+  },
+  "beforeAfter": {
+    "tagline": "השוואת התקדמות",
+    "headline": "לפני ואחרי",
+    "before": "לפני",
+    "after": "אחרי"
+  },
+  "instagram": {
+    "tagline": "עקבו אחרינו",
+    "headline": "אינסטגרם",
+    "followUs": "עקבו אחרינו"
+  },
+  "whatsapp": {
+    "tooltip": "יש שאלות? דברו איתנו"
+  }
+}

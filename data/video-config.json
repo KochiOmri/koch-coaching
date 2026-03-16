@@ -1,0 +1,59 @@
+{
+  "hero": "/videos/vid-08.mp4",
+  "about": "/videos/vid-04.mp4",
+  "showcase": [
+    {
+      "src": "/videos/vid-04.mp4",
+      "title": "Movement Correction",
+      "tag": "Training"
+    },
+    {
+      "src": "/videos/vid-05.mp4",
+      "title": "Gait Pattern Work",
+      "tag": "Biomechanics"
+    },
+    {
+      "src": "/videos/vid-06.mp4",
+      "title": "Postural Alignment",
+      "tag": "Posture"
+    },
+    {
+      "src": "/videos/vid-07.mp4",
+      "title": "Functional Training",
+      "tag": "Training"
+    },
+    {
+      "src": "/videos/vid-08.mp4",
+      "title": "Core Integration",
+      "tag": "Recovery"
+    }
+  ],
+  "method": {
+    "step1": "/videos/vid-02.mp4",
+    "step2": "/videos/vid-10.mp4",
+    "step3": "/videos/vid-11.mp4",
+    "step4": "/videos/vid-12.mp4"
+  },
+  "results": [
+    {
+      "src": "/videos/vid-01.mp4",
+      "title": "Posture Transformation",
+      "description": "12-week posture realignment journey"
+    },
+    {
+      "src": "/videos/vid-06.mp4",
+      "title": "Gait Correction",
+      "description": "Walking pattern restructured"
+    },
+    {
+      "src": "/videos/vid-07.mp4",
+      "title": "Pain Elimination",
+      "description": "Chronic pain to full mobility"
+    },
+    {
+      "src": "/videos/vid-05.mp4",
+      "title": "Movement Quality",
+      "description": "Patterns rebuilt from the ground up"
+    }
+  ]
+}

@@ -23,7 +23,92 @@ import {
   Clock,
   TrendingUp,
   Loader2,
+  Send,
+  Check,
+  BarChart3,
+  UserCheck,
+  CreditCard,
+  FileText,
 } from "lucide-react";
+
+interface ClientData {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+interface SessionNote {
+  id: string;
+  clientId: string;
+  date: string;
+  createdAt: string;
+}
+
+function BookingsChart({ appointments }: { appointments: Appointment[] }) {
+  const now = new Date();
+  const weeks: { label: string; count: number }[] = [];
+
+  for (let i = 7; i >= 0; i--) {
+    const weekEnd = new Date(now);
+    weekEnd.setDate(now.getDate() - i * 7);
+    const weekStart = new Date(weekEnd);
+    weekStart.setDate(weekEnd.getDate() - 6);
+
+    const count = appointments.filter((a) => {
+      const d = new Date(a.date);
+      return d >= weekStart && d <= weekEnd && a.status !== "cancelled";
+    }).length;
+
+    const label = `${weekStart.getMonth() + 1}/${weekStart.getDate()}`;
+    weeks.push({ label, count });
+  }
+
+  const maxCount = Math.max(...weeks.map((w) => w.count), 1);
+  const width = 560;
+  const height = 160;
+  const padX = 40;
+  const padY = 20;
+  const chartW = width - padX * 2;
+  const chartH = height - padY * 2;
+
+  const points = weeks.map((w, i) => ({
+    x: padX + (i / (weeks.length - 1)) * chartW,
+    y: padY + chartH - (w.count / maxCount) * chartH,
+    ...w,
+  }));
+
+  const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${padY + chartH} L ${points[0].x} ${padY + chartH} Z`;
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
+      {[0, Math.ceil(maxCount / 2), maxCount].map((v) => {
+        const y = padY + chartH - (v / maxCount) * chartH;
+        return (
+          <g key={v}>
+            <line x1={padX} y1={y} x2={width - padX} y2={y} stroke="var(--card-border)" strokeWidth="1" />
+            <text x={padX - 8} y={y + 4} textAnchor="end" fill="var(--muted)" fontSize="10">{v}</text>
+          </g>
+        );
+      })}
+      <defs>
+        <linearGradient id="bookingsGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill="url(#bookingsGrad)" />
+      <path d={linePath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {points.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r="3.5" fill="#3b82f6" />
+          <text x={p.x} y={padY + chartH + 14} textAnchor="middle" fill="var(--muted)" fontSize="9">{p.label}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
 
 /* --- Appointment type (matches the server-side type) --- */
 interface Appointment {
@@ -61,29 +146,54 @@ export default function AdminDashboard() {
     today.toISOString().split("T")[0]
   );
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [registeredClients, setRegisteredClients] = useState<ClientData[]>([]);
+  const [sessionNotes, setSessionNotes] = useState<SessionNote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sendingReminders, setSendingReminders] = useState(false);
+  const [reminderResult, setReminderResult] = useState<string | null>(null);
 
-  /* --- Fetch all appointments from the API ---
-     Runs when the component first loads.
-     The data is used to populate the calendar and stats. */
-  const fetchAppointments = useCallback(async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/appointments");
-      if (response.ok) {
-        const data = await response.json();
-        setAppointments(data);
-      }
+      const [aptsRes, clientsRes, notesRes] = await Promise.all([
+        fetch("/api/appointments"),
+        fetch("/api/clients"),
+        fetch("/api/session-notes"),
+      ]);
+      if (aptsRes.ok) setAppointments(await aptsRes.json());
+      if (clientsRes.ok) setRegisteredClients(await clientsRes.json());
+      if (notesRes.ok) setSessionNotes(await notesRes.json());
     } catch (error) {
-      console.error("Failed to fetch appointments:", error);
+      console.error("Failed to fetch dashboard data:", error);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAppointments();
-  }, [fetchAppointments]);
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  const handleSendReminders = async () => {
+    setSendingReminders(true);
+    setReminderResult(null);
+    try {
+      const res = await fetch("/api/cron");
+      const data = await res.json();
+      if (res.ok) {
+        setReminderResult(`Sent ${data.reminders} reminder(s) and ${data.followups} follow-up(s)`);
+        setTimeout(() => setReminderResult(null), 5000);
+      } else {
+        setReminderResult("Failed to send emails");
+        setTimeout(() => setReminderResult(null), 5000);
+      }
+    } catch {
+      setReminderResult("Network error");
+      setTimeout(() => setReminderResult(null), 5000);
+    } finally {
+      setSendingReminders(false);
+    }
+  };
 
   /* --- Calculate Stats ---
      Derived from the appointments data. */
@@ -140,12 +250,33 @@ export default function AdminDashboard() {
       <div className="md:ml-64">
         {/* Page header */}
         <header className="border-b px-6 py-6" style={{ borderColor: "var(--card-border)" }}>
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "var(--font-outfit)" }}>
-            Dashboard
-          </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-            {today.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold" style={{ fontFamily: "var(--font-outfit)" }}>
+                Dashboard
+              </h1>
+              <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                {today.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              {reminderResult && (
+                <span className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm" style={{ backgroundColor: "var(--primary)" + "15", color: "var(--primary)" }}>
+                  <Check size={14} />
+                  {reminderResult}
+                </span>
+              )}
+              <button
+                onClick={handleSendReminders}
+                disabled={sendingReminders}
+                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-opacity disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg, #d4a843, #b8922e)", color: "#000" }}
+              >
+                {sendingReminders ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                {sendingReminders ? "Sending…" : "Send Reminders"}
+              </button>
+            </div>
+          </div>
         </header>
 
         <div className="p-6">
@@ -319,6 +450,89 @@ export default function AdminDashboard() {
                     </div>
                   ))
                 )}
+              </div>
+            </div>
+          </div>
+
+          {/* --- Analytics Section --- */}
+          <div className="mt-8">
+            <h2 className="mb-4 text-lg font-bold" style={{ fontFamily: "var(--font-outfit)" }}>
+              Analytics & Insights
+            </h2>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {(() => {
+                const thisMonth = today.toISOString().slice(0, 7);
+                const sessionsThisMonth = sessionNotes.filter((n) => n.date.startsWith(thisMonth)).length;
+                const totalSessions = sessionNotes.length;
+
+                const clientSessionCounts: Record<string, number> = {};
+                for (const n of sessionNotes) {
+                  clientSessionCounts[n.clientId] = (clientSessionCounts[n.clientId] || 0) + 1;
+                }
+                const retainedClients = Object.values(clientSessionCounts).filter((c) => c >= 2).length;
+
+                return [
+                  { label: "Registered Clients", value: registeredClients.length, icon: Users, color: "#10b981" },
+                  { label: "Sessions This Month", value: sessionsThisMonth, icon: FileText, color: "var(--primary)" },
+                  { label: "Total Sessions", value: totalSessions, icon: BarChart3, color: "#3b82f6" },
+                  { label: "Retained (2+ sessions)", value: retainedClients, icon: UserCheck, color: "#8b5cf6" },
+                ];
+              })().map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-xl border p-5"
+                  style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--card-border)" }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm" style={{ color: "var(--muted)" }}>{stat.label}</p>
+                      <p className="mt-1 text-3xl font-bold" style={{ fontFamily: "var(--font-outfit)" }}>
+                        {stat.value}
+                      </p>
+                    </div>
+                    <stat.icon size={24} style={{ color: stat.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              {/* Bookings Per Week Chart */}
+              <div
+                className="rounded-2xl border p-6"
+                style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--card-border)" }}
+              >
+                <div className="mb-4 flex items-center gap-2">
+                  <BarChart3 size={18} style={{ color: "#3b82f6" }} />
+                  <h3 className="font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>
+                    Bookings Per Week (Last 8 Weeks)
+                  </h3>
+                </div>
+                <BookingsChart appointments={appointments} />
+              </div>
+
+              {/* Revenue Placeholder */}
+              <div
+                className="flex flex-col items-center justify-center rounded-2xl border p-8 text-center"
+                style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--card-border)" }}
+              >
+                <div
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: "var(--primary)" + "15" }}
+                >
+                  <CreditCard size={28} style={{ color: "var(--primary)" }} />
+                </div>
+                <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-outfit)" }}>Revenue Tracking</h3>
+                <p className="mt-2 max-w-xs text-sm" style={{ color: "var(--muted)" }}>
+                  Coming soon — connect Stripe to track revenue, view payment history, and generate financial reports.
+                </p>
+                <div
+                  className="mt-4 rounded-full px-4 py-1.5 text-xs font-medium"
+                  style={{ backgroundColor: "var(--primary)" + "15", color: "var(--primary)" }}
+                >
+                  Coming Soon
+                </div>
               </div>
             </div>
           </div>

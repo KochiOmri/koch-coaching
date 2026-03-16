@@ -42,6 +42,7 @@ export interface Appointment {
   status: "pending" | "confirmed" | "cancelled";
   createdAt: string;
   googleEventId?: string;
+  meetLink?: string;
 }
 
 /* --- File Path ---

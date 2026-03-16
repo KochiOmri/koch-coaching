@@ -1,0 +1,13 @@
+[
+  { "appointmentId": "apt-001", "type": "reminder", "sentAt": "2026-03-09T08:00:00.000Z" },
+  { "appointmentId": "apt-001", "type": "confirmation", "sentAt": "2026-03-05T08:15:00.000Z" },
+  { "appointmentId": "apt-002", "type": "reminder", "sentAt": "2026-03-10T08:00:00.000Z" },
+  { "appointmentId": "apt-002", "type": "confirmation", "sentAt": "2026-03-06T10:45:00.000Z" },
+  { "appointmentId": "apt-003", "type": "confirmation", "sentAt": "2026-03-07T14:15:00.000Z" },
+  { "appointmentId": "apt-008", "type": "reminder", "sentAt": "2026-03-03T08:00:00.000Z" },
+  { "appointmentId": "apt-008", "type": "followup", "sentAt": "2026-03-07T08:00:00.000Z" },
+  { "appointmentId": "apt-009", "type": "confirmation", "sentAt": "2026-02-26T09:15:00.000Z" },
+  { "appointmentId": "apt-009", "type": "followup", "sentAt": "2026-03-05T08:00:00.000Z" },
+  { "appointmentId": "apt-010", "type": "reminder", "sentAt": "2026-02-24T08:00:00.000Z" },
+  { "appointmentId": "apt-010", "type": "followup", "sentAt": "2026-02-28T08:00:00.000Z" }
+]

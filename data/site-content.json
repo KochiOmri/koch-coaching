@@ -1,0 +1,183 @@
+{
+  "hero": {
+    "headline": "Move the Way",
+    "headlineAccent": "Nature Intended",
+    "subheadline": "Biomechanics-based coaching built on the Functional Patterns methodology. I address the root cause of pain and dysfunction — not just the symptoms.",
+    "ctaText": "Book Free Session",
+    "secondaryCtaText": "Watch Results"
+  },
+  "about": {
+    "tagline": "About Your Coach",
+    "headline": "The Science of",
+    "headlineAccent": "Movement",
+    "paragraphs": [
+      "Functional Patterns was founded by Naudi Aguilar in 2009 and is built on a simple premise: human health depends on alignment with our evolutionary blueprint. Rather than treating isolated symptoms, FP addresses the body as an integrated system — analyzing gait, posture, and movement habits to uncover the structural causes of dysfunction.",
+      "The methodology centers on optimizing the 'FP Big 4' — the four core human movement patterns that evolved over millions of years: Standing, Walking, Running, and Throwing. By perfecting these foundational movements, we create lasting structural changes that eliminate pain at its source.",
+      "As an FP-certified practitioner, I combine biomechanics assessment with personalized corrective protocols. My clients don't just feel better temporarily — they move better permanently. Whether you're dealing with chronic pain, poor posture, or athletic limitations, the answer is in your movement patterns."
+    ],
+    "stats": [
+      { "value": "100+", "label": "Clients Coached" },
+      { "value": "1000+", "label": "Training Hours" },
+      { "value": "FP", "label": "Certified Practitioner" },
+      { "value": "90%+", "label": "Pain Reduction Rate" }
+    ]
+  },
+  "fpContent": {
+    "tagline": "THE METHODOLOGY",
+    "headline": "What is Functional Patterns?",
+    "description": "Functional Patterns is a biomechanics-based training system that draws from anthropology, kinesiology, biology, and physiology. Unlike conventional fitness or physical therapy, FP works with the body's evolutionary design to create real, lasting structural change.",
+    "principles": [
+      {
+        "title": "The FP Big 4",
+        "description": "Every exercise is built around the four movement patterns humans evolved to perform: Standing, Walking, Running, and Throwing. These are the blueprints for optimal human function.",
+        "icon": "activity"
+      },
+      {
+        "title": "Root Cause, Not Symptoms",
+        "description": "Pain is a signal, not the problem. FP traces dysfunction back to its biomechanical origin — often far from where you feel pain. A shoulder issue might stem from your pelvis.",
+        "icon": "search"
+      },
+      {
+        "title": "Gait Cycle Analysis",
+        "description": "Walking is the most fundamental human movement. By analyzing and correcting your gait cycle, we unlock improvements across your entire kinetic chain.",
+        "icon": "footprints"
+      },
+      {
+        "title": "Myofascial Integration",
+        "description": "Muscles don't work in isolation — they work through fascial chains. FP training respects these connections, creating integrated whole-body improvements rather than isolated muscle gains.",
+        "icon": "link"
+      }
+    ],
+    "evidence": [
+      "Clients report 90%+ reduction in chronic pain within 3-6 months",
+      "Measurable posture improvements visible in before/after comparisons",
+      "Scoliosis curve reduction of up to 16 degrees documented",
+      "Athletes return to sport pain-free after correcting dysfunctional gait patterns",
+      "Stroke survivors achieve improved gait coordination and balance",
+      "Most results come from consistent once-weekly sessions over 12+ weeks"
+    ]
+  },
+  "services": {
+    "tagline": "WHAT I OFFER",
+    "headline": "Coaching Services",
+    "subheadline": "Choose the coaching experience that fits your goals. Every program is built on the science of Functional Patterns biomechanics.",
+    "items": [
+      {
+        "title": "1-on-1 Coaching",
+        "description": "Personalized biomechanics assessment and hands-on training. I analyze your posture, gait, and movement patterns to build a protocol targeting your specific dysfunctions.",
+        "features": ["Full posture & gait analysis", "Custom FP training protocol", "Myofascial release techniques", "Weekly progress tracking", "WhatsApp support between sessions"],
+        "price": "Free Consultation",
+        "featured": false
+      },
+      {
+        "title": "Intensive 12-Week Program",
+        "description": "A deep-dive transformation program with comprehensive biomechanical restructuring. This is the gold standard for lasting structural change.",
+        "features": ["Everything in 1-on-1", "3 sessions per week", "Full gait cycle analysis & re-analysis", "Video movement review", "Nutritional guidance for recovery", "Priority scheduling"],
+        "price": "Free Consultation",
+        "featured": true
+      },
+      {
+        "title": "Online Coaching",
+        "description": "Remote biomechanics coaching via video calls. Using video analysis of your movement patterns, I build a home program you can follow anywhere in the world.",
+        "features": ["Video posture & gait assessment", "Custom home exercise program", "Bi-weekly video coaching calls", "Exercise video library access", "Email & WhatsApp support"],
+        "price": "Free Consultation",
+        "featured": false
+      }
+    ]
+  },
+  "method": {
+    "tagline": "The Process",
+    "headline": "How It Works",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Biomechanical Assessment",
+        "description": "I perform a comprehensive analysis of your posture, gait cycle, joint mobility, and muscle activation patterns. This reveals the root causes of your pain and dysfunction — often in places you wouldn't expect.",
+        "tags": ["Posture Analysis", "Gait Recording", "Joint Mobility", "Muscle Testing"]
+      },
+      {
+        "number": "02",
+        "title": "Protocol Design",
+        "description": "Based on your assessment, I design a personalized FP training protocol. Every exercise targets your specific dysfunctional patterns using the Big 4 movement framework (standing, walking, running, throwing).",
+        "tags": ["FP Big 4", "Custom Exercises", "Myofascial Release", "Progressive Overload"]
+      },
+      {
+        "number": "03",
+        "title": "Training & Correction",
+        "description": "Hands-on coaching sessions where I guide you through corrective exercises with precise biomechanical cuing. Real-time feedback ensures proper muscle activation and movement quality.",
+        "tags": ["Hands-on Cuing", "Real-time Feedback", "Neuromuscular Re-ed", "Pattern Integration"]
+      },
+      {
+        "number": "04",
+        "title": "Measurable Results",
+        "description": "We document your progress with before/after comparisons of posture and gait. Most clients experience significant pain reduction within 4-8 weeks, with lasting structural changes at 12+ weeks.",
+        "tags": ["Before/After Photos", "Gait Re-analysis", "Pain Score Tracking", "Maintenance Plan"]
+      }
+    ]
+  },
+  "testimonials": [
+    {
+      "name": "David M.",
+      "initials": "DM",
+      "issue": "Chronic Lower Back Pain — 10 Years",
+      "quote": "After a decade of back pain and trying everything from physio to chiro, Koch's approach was the first thing that actually addressed WHY I was in pain. He traced it back to my gait pattern. 3 months later — completely pain-free.",
+      "rating": 5,
+      "color": "#d4a843"
+    },
+    {
+      "name": "Sarah K.",
+      "initials": "SK",
+      "issue": "Poor Posture & Chronic Neck Pain",
+      "quote": "Koch didn't just give me exercises — he taught me HOW my body should actually move. My posture transformed visibly within weeks. The neck pain I'd had for 5 years is completely gone.",
+      "rating": 5,
+      "color": "#3b82f6"
+    },
+    {
+      "name": "Mike R.",
+      "initials": "MR",
+      "issue": "Running Injuries & Gait Dysfunction",
+      "quote": "Functional Patterns showed me my gait was completely dysfunctional — my pelvis was rotating wrong on every step. After correcting my patterns, I'm running faster with zero injuries for the first time in years.",
+      "rating": 5,
+      "color": "#10b981"
+    },
+    {
+      "name": "Lisa T.",
+      "initials": "LT",
+      "issue": "Shoulder & Hip Pain — Failed PT",
+      "quote": "I tried physical therapy for 3 years with no lasting results. Koch found the root cause in my walking pattern — my shoulder pain was coming from my hip. 6 weeks in and I'm pain-free. This is different from anything I've tried.",
+      "rating": 5,
+      "color": "#8b5cf6"
+    },
+    {
+      "name": "Tom A.",
+      "initials": "TA",
+      "issue": "Scoliosis & Daily Pain",
+      "quote": "My doctor told me scoliosis can't be fixed without surgery. Koch's biomechanics approach has reduced my curve measurably and I'm living without daily pain medication for the first time in my adult life.",
+      "rating": 5,
+      "color": "#f59e0b"
+    },
+    {
+      "name": "Noa S.",
+      "initials": "NS",
+      "issue": "Post-Pregnancy Body Recovery",
+      "quote": "After two pregnancies, my core was disconnected and my posture was wrecked. Koch rebuilt my movement patterns from the ground up. I'm stronger and more aligned now than before I had kids.",
+      "rating": 5,
+      "color": "#ec4899"
+    }
+  ],
+  "contact": {
+    "email": "omrikochman@gmail.com",
+    "phone": "+972 XXX-XXX-XXXX",
+    "phoneRaw": "+972000000000",
+    "location": "Israel",
+    "whatsappNumber": "972000000000",
+    "whatsappMessage": "Hi Koch! I'm interested in Functional Patterns coaching. Can I book a free consultation?",
+    "instagramHandle": "koch.fp",
+    "youtubeHandle": "koch.fp",
+    "hours": [
+      { "days": "Sunday - Thursday", "time": "09:00 - 18:00" },
+      { "days": "Friday", "time": "09:00 - 13:00" },
+      { "days": "Saturday", "time": "Closed" }
+    ]
+  }
+}
