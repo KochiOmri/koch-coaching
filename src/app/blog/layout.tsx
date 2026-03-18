@@ -2,12 +2,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getSiteContent } from "@/lib/site-content";
 
-export default function BlogLayout({
+export default async function BlogLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const content = getSiteContent();
+  const content = await getSiteContent();
 
   return (
     <>

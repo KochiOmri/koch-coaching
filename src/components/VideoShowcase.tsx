@@ -11,7 +11,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
 import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from "lucide-react";
 import LazyVideo from "./LazyVideo";
 
@@ -24,8 +23,11 @@ interface ShowcaseVideo {
 export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const [isLightboxVisible, setIsLightboxVisible] = useState(false);
   const lightboxVideoRef = useRef<HTMLVideoElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
@@ -51,6 +53,27 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
     return () => el.removeEventListener("scroll", checkScroll);
   }, [checkScroll]);
 
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsSectionVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (lightboxSrc) {
+      requestAnimationFrame(() => setIsLightboxVisible(true));
+    } else {
+      setIsLightboxVisible(false);
+    }
+  }, [lightboxSrc]);
+
   const scroll = (dir: "left" | "right") => {
     scrollRef.current?.scrollBy({
       left: dir === "left" ? -350 : 350,
@@ -60,14 +83,13 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
 
   return (
     <>
-      <section id="showcase" className="relative py-24 sm:py-32">
+      <section ref={sectionRef} id="showcase" className="relative py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
+              className={`transition-all duration-700 ${
+                isSectionVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
+              }`}
             >
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
                 See It In Action
@@ -78,7 +100,7 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
               >
                 Training Showcase
               </h2>
-            </motion.div>
+            </div>
             <div className="hidden gap-2 sm:flex">
               <button
                 onClick={() => scroll("left")}
@@ -112,14 +134,15 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
           style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
         >
           {videos.map((video, index) => (
-            <motion.div
+            <div
               key={video.src + index}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="group relative shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-card-border bg-black"
-              style={{ width: "280px" }}
+              className="group relative shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-card-border bg-black transition-all duration-700"
+              style={{
+                width: "280px",
+                opacity: isSectionVisible ? 1 : 0,
+                transform: isSectionVisible ? "translateX(0)" : "translateX(40px)",
+                transitionDelay: isSectionVisible ? `${index * 80}ms` : "0ms",
+              }}
               onClick={() => setLightboxSrc(video.src)}
             >
               <LazyVideo
@@ -135,7 +158,10 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div className="rounded-full bg-white/10 p-4 backdrop-blur-md">
+                <div
+                  className="rounded-full p-4"
+                  style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+                >
                   <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
@@ -143,23 +169,28 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-5">
-                <span className="inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur-sm">
+                <span
+                  className="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary"
+                  style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                >
                   {video.tag}
                 </span>
                 <h4 className="mt-2 text-base font-bold text-white" style={{ fontFamily: "var(--font-outfit)" }}>
                   {video.title}
                 </h4>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
       {lightboxSrc && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4"
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-700"
+          style={{
+            backgroundColor: "rgba(0,0,0,0.95)",
+            opacity: isLightboxVisible ? 1 : 0,
+          }}
           onClick={() => {
             setLightboxSrc(null);
             setIsMuted(true);
@@ -171,7 +202,8 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
                 setLightboxSrc(null);
                 setIsMuted(true);
               }}
-              className="absolute -top-14 right-0 rounded-full bg-white/10 p-2.5 text-white hover:bg-white/20"
+              className="absolute -top-14 right-0 rounded-full p-2.5 text-white transition-colors hover:bg-white/20"
+              style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
             >
               <X size={20} />
             </button>
@@ -187,12 +219,13 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
             </video>
             <button
               onClick={toggleMute}
-              className="absolute bottom-4 right-4 rounded-full bg-black/60 p-3 text-white backdrop-blur-sm hover:bg-black/80"
+              className="absolute bottom-4 right-4 rounded-full p-3 text-white transition-colors hover:bg-black/80"
+              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
             >
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
           </div>
-        </motion.div>
+        </div>
       )}
     </>
   );

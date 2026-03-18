@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, use } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 import {
   Loader2,
   ArrowLeft,
@@ -78,11 +79,10 @@ export default function ProgramDetail({ params }: { params: Promise<{ id: string
 
   const loadProgram = useCallback(async () => {
     try {
-      const authRes = await fetch("/api/client-auth");
-      if (!authRes.ok) {
-        router.push("/portal/login");
-        return;
-      }
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/portal/login"); return; }
+
       const res = await fetch(`/api/programs/${id}`);
       if (res.ok) {
         setProgram(await res.json());

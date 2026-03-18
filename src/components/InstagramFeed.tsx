@@ -9,7 +9,6 @@
  */
 "use client";
 
-import { motion } from "framer-motion";
 import { Instagram, ExternalLink } from "lucide-react";
 import LazyVideo from "./LazyVideo";
 
@@ -24,13 +23,7 @@ export default function InstagramFeed({ handle }: { handle: string }) {
   return (
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Follow The Journey</span>
           <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>
             @{handle}
@@ -38,19 +31,15 @@ export default function InstagramFeed({ handle }: { handle: string }) {
           <p className="mx-auto mt-4 max-w-xl text-muted">
             Follow my Instagram for daily movement tips, client transformations, and biomechanics breakdowns.
           </p>
-        </motion.div>
+        </div>
 
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {posts.map((post, index) => (
-            <motion.a
+          {posts.map((post) => (
+            <a
               key={post.id}
               href={`https://instagram.com/${handle}`}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative overflow-hidden rounded-xl border border-card-border"
             >
               <div style={{ aspectRatio: "1/1" }} className="overflow-hidden bg-black">
@@ -69,17 +58,11 @@ export default function InstagramFeed({ handle }: { handle: string }) {
                   <span className="text-xs font-medium text-white">View on Instagram</span>
                 </div>
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-8 text-center"
-        >
+        <div className="mt-8 text-center">
           <a
             href={`https://instagram.com/${handle}`}
             target="_blank"
@@ -90,7 +73,7 @@ export default function InstagramFeed({ handle }: { handle: string }) {
             Follow @{handle}
             <ExternalLink size={14} />
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 import {
   Loader2,
   LogOut,
@@ -80,13 +81,12 @@ export default function PortalExercises() {
 
   const loadData = useCallback(async () => {
     try {
-      const authRes = await fetch("/api/client-auth");
-      if (!authRes.ok) {
-        router.push("/portal/login");
-        return;
-      }
-      const authData = await authRes.json();
-      setClient(authData.client);
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/portal/login"); return; }
+
+      const { data: profile } = await supabase.from("profiles").select("id, name, email").eq("id", user.id).single();
+      setClient({ id: user.id, name: profile?.name || "", email: profile?.email || user.email || "" });
 
       const params = new URLSearchParams();
       if (filterCategory) params.set("category", filterCategory);
@@ -106,7 +106,8 @@ export default function PortalExercises() {
   }, [loadData]);
 
   const handleLogout = async () => {
-    await fetch("/api/client-auth", { method: "DELETE" });
+    const supabase = createClient();
+    await supabase.auth.signOut();
     router.push("/portal/login");
   };
 

@@ -2,23 +2,24 @@
  * SITE CONTENT — CMS data layer for all website copy
  *
  * WHAT IT DOES:
- * Reads and writes all text content from data/site-content.json. Every section of
- * the main page pulls its copy from here: hero, about, services, method, testimonials,
- * and contact. No hardcoded headlines or paragraphs in components.
+ * Reads and writes all text content. Dual-mode: Supabase when configured,
+ * JSON file fallback otherwise. Every section of the main page pulls its copy
+ * from here: hero, about, services, method, testimonials, and contact.
  *
  * ARCHITECTURE:
- * - Single JSON file as the content store (file-based CMS, no database)
+ * - Supabase site_content table when configured (id='main', content jsonb)
+ * - JSON file fallback: data/site-content.json (and site-content-he.json for Hebrew)
  * - Used by: page components via getSiteContent(), admin UI via saveSiteContent()
- * - Mirrors the structure of video-config.ts — both live under data/
  *
  * DEV PLAN:
- * - Admin UI edits this JSON to update copy without deploying
+ * - Admin UI edits content to update copy without deploying
  * - Add new sections by extending the SiteContent interface and the JSON schema
  * - Consider validation (e.g. Zod) before save to catch malformed content
  */
 
 import fs from "fs";
 import path from "path";
+import { isSupabaseConfigured, getDb } from "@/lib/supabase/db";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DATA_PATH = path.join(DATA_DIR, "site-content.json");
@@ -93,9 +94,9 @@ export interface SiteContent {
   };
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+// ─── JSON file fallback (existing logic) ──────────────────────────────────────
 
-export function getSiteContent(locale: "en" | "he" = "en"): SiteContent {
+function getSiteContentFromFile(locale: "en" | "he" = "en"): SiteContent {
   const filePath = locale === "he" ? DATA_PATH_HE : DATA_PATH;
   if (!fs.existsSync(filePath)) {
     const raw = fs.readFileSync(DATA_PATH, "utf-8");
@@ -105,6 +106,45 @@ export function getSiteContent(locale: "en" | "he" = "en"): SiteContent {
   return JSON.parse(raw);
 }
 
-export function saveSiteContent(content: SiteContent): void {
+function saveSiteContentToFile(content: SiteContent): void {
   fs.writeFileSync(DATA_PATH, JSON.stringify(content, null, 2));
+}
+
+// ─── Public API (dual-mode: Supabase first, JSON fallback) ────────────────────
+
+export async function getSiteContent(locale: "en" | "he" = "en"): Promise<SiteContent> {
+  const fallback = getSiteContentFromFile(locale);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const db = await getDb();
+      if (db) {
+        const { data, error } = await db
+          .from("site_content")
+          .select("content")
+          .eq("id", "main")
+          .single();
+        if (!error && data?.content) {
+          const supabaseContent = data.content as Partial<SiteContent>;
+          return { ...fallback, ...supabaseContent };
+        }
+      }
+    } catch {
+      // Supabase query failed (RLS, network, etc.) -- use file fallback
+    }
+  }
+  return fallback;
+}
+
+export async function saveSiteContent(content: SiteContent): Promise<void> {
+  if (isSupabaseConfigured()) {
+    const db = await getDb();
+    if (db) {
+      const { error } = await db
+        .from("site_content")
+        .upsert({ id: "main", content }, { onConflict: "id" });
+      if (!error) return;
+    }
+  }
+  saveSiteContentToFile(content);
 }

@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import PortalNav from "@/components/PortalNav";
+import { createClient } from "@/lib/supabase/client";
 import {
   Loader2,
-  LogOut,
   Dumbbell,
   Clock,
   ChevronRight,
@@ -55,31 +55,26 @@ export default function ClientDashboard() {
   const [activePackage, setActivePackage] = useState<ClientPackageInfo | null>(null);
   const [packageInfo, setPackageInfo] = useState<PackageInfo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isDark, setIsDark] = useState(true);
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [referralLoading, setReferralLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    setIsDark(!document.documentElement.classList.contains("light"));
-  }, []);
-
   const loadData = useCallback(async () => {
     try {
-      const authRes = await fetch("/api/client-auth");
-      if (!authRes.ok) {
-        router.push("/portal/login");
-        return;
-      }
-      const authData = await authRes.json();
-      setClient(authData.client);
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/portal/login"); return; }
 
-      const progRes = await fetch(`/api/programs?clientId=${authData.client.id}`);
+      const { data: profile } = await supabase.from("profiles").select("id, name, email").eq("id", user.id).single();
+      const cid = user.id;
+      setClient({ id: cid, name: profile?.name || user.email?.split("@")[0] || "", email: profile?.email || user.email || "" });
+
+      const progRes = await fetch(`/api/programs?clientId=${cid}`);
       if (progRes.ok) {
         setPrograms(await progRes.json());
       }
 
-      const cpRes = await fetch(`/api/client-packages?clientId=${authData.client.id}`);
+      const cpRes = await fetch(`/api/client-packages?clientId=${cid}`);
       if (cpRes.ok) {
         const cpData: ClientPackageInfo[] = await cpRes.json();
         const active = cpData.find((cp) => cp.status === "active");
@@ -93,7 +88,7 @@ export default function ClientDashboard() {
         }
       }
 
-      const refRes = await fetch(`/api/referrals?clientId=${authData.client.id}`);
+      const refRes = await fetch(`/api/referrals?clientId=${cid}`);
       if (refRes.ok) {
         const refData = await refRes.json();
         if (refData?.referralCode) setReferralCode(refData.referralCode);
@@ -109,11 +104,6 @@ export default function ClientDashboard() {
     loadData();
   }, [loadData]);
 
-  const handleLogout = async () => {
-    await fetch("/api/client-auth", { method: "DELETE" });
-    router.push("/portal/login");
-  };
-
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: "var(--background)" }}>
@@ -124,42 +114,7 @@ export default function ClientDashboard() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}>
-      {/* Header */}
-      <header
-        className="border-b"
-        style={{ borderColor: "var(--card-border)", backgroundColor: "var(--card-bg)" }}
-      >
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <Image
-              src={isDark ? "/logo-white.png" : "/logo-transparent.png"}
-              alt="KOCH"
-              width={32}
-              height={32}
-              loading="lazy"
-            />
-            <div>
-              <span className="text-sm font-bold tracking-widest" style={{ fontFamily: "var(--font-outfit)" }}>
-                KOCH
-              </span>
-              <span
-                className="ml-2 rounded-full px-2 py-0.5 text-[10px] font-medium"
-                style={{ backgroundColor: "var(--primary)", color: "var(--background)" }}
-              >
-                PORTAL
-              </span>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-colors hover:bg-red-500/10"
-            style={{ color: "var(--muted)" }}
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
-        </div>
-      </header>
+      <PortalNav />
 
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         {/* Welcome */}

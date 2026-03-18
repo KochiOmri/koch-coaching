@@ -83,7 +83,6 @@ export default function AvailabilityPage() {
      In Phase 2, this saves to the database and the booking form
      reads these settings to show correct available slots. */
   const handleSave = () => {
-    console.log("Availability saved:", { schedule, sessionDuration, breakBetween, blockedDates });
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };

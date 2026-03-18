@@ -28,7 +28,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Calendar,
   Clock,
@@ -197,10 +196,12 @@ export default function BookingForm() {
     return (
       <section id="book" className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
         <div className="mx-auto max-w-2xl px-4 text-center">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+          <div
+            style={{
+              transition: "all 0.5s ease",
+              opacity: 1,
+              transform: "scale(1)",
+            }}
           >
             <CheckCircle size={64} className="mx-auto text-primary" />
             <h2
@@ -246,7 +247,7 @@ export default function BookingForm() {
             >
               Book Another Session
             </button>
-          </motion.div>
+          </div>
         </div>
       </section>
     );
@@ -260,13 +261,7 @@ export default function BookingForm() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* --- Section Header --- */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <span className="text-sm font-medium tracking-widest text-primary">
             SCHEDULE A SESSION
           </span>
@@ -280,7 +275,7 @@ export default function BookingForm() {
             Take the first step towards pain-free movement. Select a date and
             time that works for you, and let&apos;s discuss your goals.
           </p>
-        </motion.div>
+        </div>
 
         {/* --- Progress Steps ---
             Shows which step the user is on (1. Date, 2. Time, 3. Details) */}
@@ -319,10 +314,9 @@ export default function BookingForm() {
 
         {/* --- Step 1: Calendar Date Picker --- */}
         {currentStep === 1 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="mx-auto mt-12 max-w-md rounded-2xl border border-card-border bg-card-bg p-6"
+            style={{ transition: "all 0.5s ease", opacity: 1, transform: "translateY(0)" }}
           >
             {/* Month Navigation */}
             <div className="flex items-center justify-between">
@@ -397,15 +391,14 @@ export default function BookingForm() {
                 );
               })}
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* --- Step 2: Time Slot Selection --- */}
         {currentStep === 2 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="mx-auto mt-12 max-w-md rounded-2xl border border-card-border bg-card-bg p-6"
+            style={{ transition: "all 0.5s ease", opacity: 1, transform: "translateY(0)" }}
           >
             <h3
               className="text-center text-lg font-semibold"
@@ -443,15 +436,14 @@ export default function BookingForm() {
                 );
               })}
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* --- Step 3: Client Details Form --- */}
         {currentStep === 3 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="mx-auto mt-12 max-w-lg"
+            style={{ transition: "all 0.5s ease", opacity: 1, transform: "translateY(0)" }}
           >
             {/* Selected date/time summary */}
             <div className="mb-6 flex items-center justify-center gap-4 text-sm">
@@ -573,7 +565,7 @@ export default function BookingForm() {
                 CONFIRM BOOKING
               </button>
             </form>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

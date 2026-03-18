@@ -11,7 +11,6 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
 import { ArrowLeftRight } from "lucide-react";
 import LazyVideo from "./LazyVideo";
 
@@ -92,15 +91,15 @@ function Slider({ comparison }: { comparison: Comparison }) {
         style={{ left: `${position}%`, transform: "translateX(-50%)" }}
       >
         <div className="h-full w-0.5 bg-white shadow-lg" />
-        <div className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-black/60 backdrop-blur-sm">
+        <div className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white" style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
           <ArrowLeftRight size={16} className="text-white" />
         </div>
       </div>
 
-      <div className="absolute left-4 top-4 z-10 rounded-full bg-red-500/80 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+      <div className="absolute left-4 top-4 z-10 rounded-full px-3 py-1 text-xs font-bold text-white" style={{ backgroundColor: "rgba(239, 68, 68, 0.9)" }}>
         {comparison.beforeLabel}
       </div>
-      <div className="absolute right-4 top-4 z-10 rounded-full bg-green-500/80 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+      <div className="absolute right-4 top-4 z-10 rounded-full px-3 py-1 text-xs font-bold text-white" style={{ backgroundColor: "rgba(34, 197, 94, 0.9)" }}>
         {comparison.afterLabel}
       </div>
     </div>
@@ -111,13 +110,7 @@ export default function BeforeAfterSlider() {
   return (
     <section className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">See The Difference</span>
           <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>
             Before & After
@@ -125,20 +118,14 @@ export default function BeforeAfterSlider() {
           <p className="mx-auto mt-4 max-w-xl text-muted">
             Drag the slider to compare. Real client transformations through Functional Patterns biomechanics coaching.
           </p>
-        </motion.div>
+        </div>
 
         <div className="mt-16 grid gap-8 sm:grid-cols-2">
           {comparisons.map((comp, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-            >
+            <div key={i}>
               <Slider comparison={comp} />
               <p className="mt-3 text-center text-sm text-muted">{comp.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

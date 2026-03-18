@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { isSupabaseConfigured, getDb } from "@/lib/supabase/db";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const PACKAGES_FILE = path.join(DATA_DIR, "packages.json");
@@ -36,8 +37,35 @@ function writePackages(data: Package[]): void {
   fs.writeFileSync(PACKAGES_FILE, JSON.stringify(data, null, 2));
 }
 
+function mapRowToPackage(row: Record<string, unknown>): Package {
+  return {
+    id: String(row.id),
+    name: String(row.name),
+    description: String(row.description ?? ""),
+    sessionCount: Number(row.session_count ?? 0),
+    price: Number(row.price ?? 0),
+    duration: String(row.duration ?? ""),
+    features: Array.isArray(row.features) ? (row.features as string[]) : [],
+    isActive: row.is_active !== false,
+    createdAt: String(row.created_at ?? ""),
+  };
+}
+
 export async function GET() {
   try {
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { data, error } = await db.from("packages").select("*");
+        if (error) {
+          console.error("Packages GET Supabase error:", error);
+          return NextResponse.json({ error: "Failed to load packages" }, { status: 500 });
+        }
+        const packages = (data ?? []).map((r) => mapRowToPackage(r as Record<string, unknown>));
+        return NextResponse.json(packages);
+      }
+    }
+
     const packages = readPackages();
     return NextResponse.json(packages);
   } catch (error) {
@@ -56,6 +84,30 @@ export async function POST(request: NextRequest) {
         { error: "Name and session count are required" },
         { status: 400 }
       );
+    }
+
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const row = {
+          id: crypto.randomUUID(),
+          name,
+          description: description || "",
+          session_count: sessionCount,
+          price: price || 0,
+          duration: duration || "",
+          features: features || [],
+          is_active: isActive !== false,
+          created_at: new Date().toISOString(),
+        };
+        const { data, error } = await db.from("packages").insert(row).select().single();
+        if (error) {
+          console.error("Packages POST Supabase error:", error);
+          return NextResponse.json({ error: "Failed to create package" }, { status: 500 });
+        }
+        const newPackage = mapRowToPackage(data as Record<string, unknown>);
+        return NextResponse.json(newPackage, { status: 201 });
+      }
     }
 
     const packages = readPackages();
@@ -90,6 +142,34 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Package ID is required" }, { status: 400 });
     }
 
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const dbUpdates: Record<string, unknown> = {};
+        if (updates.name !== undefined) dbUpdates.name = updates.name;
+        if (updates.description !== undefined) dbUpdates.description = updates.description;
+        if (updates.sessionCount !== undefined) dbUpdates.session_count = updates.sessionCount;
+        if (updates.price !== undefined) dbUpdates.price = updates.price;
+        if (updates.duration !== undefined) dbUpdates.duration = updates.duration;
+        if (updates.features !== undefined) dbUpdates.features = updates.features;
+        if (updates.isActive !== undefined) dbUpdates.is_active = updates.isActive;
+
+        if (Object.keys(dbUpdates).length === 0) {
+          const { data } = await db.from("packages").select("*").eq("id", id).single();
+          if (!data) return NextResponse.json({ error: "Package not found" }, { status: 404 });
+          return NextResponse.json(mapRowToPackage(data as Record<string, unknown>));
+        }
+
+        const { data, error } = await db.from("packages").update(dbUpdates).eq("id", id).select().single();
+        if (error) {
+          console.error("Packages PUT Supabase error:", error);
+          return NextResponse.json({ error: "Failed to update package" }, { status: 500 });
+        }
+        if (!data) return NextResponse.json({ error: "Package not found" }, { status: 404 });
+        return NextResponse.json(mapRowToPackage(data as Record<string, unknown>));
+      }
+    }
+
     const packages = readPackages();
     const idx = packages.findIndex((p) => p.id === id);
     if (idx === -1) {
@@ -113,6 +193,18 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json({ error: "Package ID is required" }, { status: 400 });
+    }
+
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { error } = await db.from("packages").delete().eq("id", id);
+        if (error) {
+          console.error("Packages DELETE Supabase error:", error);
+          return NextResponse.json({ error: "Failed to delete package" }, { status: 500 });
+        }
+        return NextResponse.json({ success: true });
+      }
     }
 
     const packages = readPackages();

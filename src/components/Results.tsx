@@ -9,9 +9,8 @@
  */
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
 import LazyVideo from "./LazyVideo";
 
 interface ResultVideo {
@@ -31,35 +30,57 @@ interface Testimonial {
 
 export default function Results({ videos, testimonials }: { videos: ResultVideo[]; testimonials: Testimonial[] }) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const next = () => setActiveTestimonial((p) => (p + 1) % testimonials.length);
   const prev = () => setActiveTestimonial((p) => (p - 1 + testimonials.length) % testimonials.length);
 
   return (
-    <section id="results" className="relative py-24 sm:py-32">
+    <section id="results" ref={sectionRef} className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
+        <div
+          className="text-center transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(20px)",
+            transition: "all 0.7s ease",
+            transitionDelay: "0.2s",
+          }}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Real Results</span>
           <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>
             Client Transformations
           </h2>
-        </motion.div>
+        </div>
 
         <div className="mt-16 grid grid-cols-2 gap-5 sm:grid-cols-4">
           {videos.slice(0, 4).map((video, index) => (
-            <motion.div
+            <div
               key={video.src + index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl border border-card-border bg-black"
+              className="group relative overflow-hidden rounded-2xl border border-card-border bg-black transition-all duration-700"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(30px)",
+                transition: "all 0.7s ease",
+                transitionDelay: `${index * 100}ms`,
+              }}
             >
               <LazyVideo
                 src={video.src}
@@ -77,24 +98,26 @@ export default function Results({ videos, testimonials }: { videos: ResultVideo[
                 </h3>
                 <p className="mt-1 text-[11px] text-white/60 sm:text-xs">{video.description}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {testimonials.length > 0 && (
           <div className="mt-20">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
+            <div
+              className="text-center transition-all duration-700"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(20px)",
+                transition: "all 0.7s ease",
+                transitionDelay: "0.4s",
+              }}
             >
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Testimonials</span>
               <h3 className="mt-3 text-2xl font-extrabold sm:text-3xl" style={{ fontFamily: "var(--font-outfit)" }}>
                 What Clients Say
               </h3>
-            </motion.div>
+            </div>
 
             <div className="relative mx-auto mt-12 max-w-2xl">
               <div className="overflow-hidden rounded-3xl border border-card-border bg-card-bg p-8 sm:p-12">

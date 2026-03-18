@@ -10,7 +10,7 @@
  */
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import LazyVideo from "./LazyVideo";
 
 interface MethodVideos {
@@ -34,33 +34,61 @@ interface MethodContent {
 const stepKeys = ["step1", "step2", "step3", "step4"] as const;
 
 export default function Method({ videos, content }: { videos: MethodVideos; content: MethodContent }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section id="method" className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
+    <section
+      id="method"
+      ref={sectionRef}
+      className="relative py-24 sm:py-32"
+      style={{ backgroundColor: "var(--section-alt)" }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
+        <div
+          className="text-center transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(20px)",
+            transition: "all 0.7s ease",
+            transitionDelay: "0.2s",
+          }}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">{content.tagline}</span>
           <h2 className="mt-3 text-4xl font-extrabold sm:text-5xl" style={{ fontFamily: "var(--font-outfit)" }}>
             {content.headline}
           </h2>
-        </motion.div>
+        </div>
 
         <div className="mt-20 space-y-12">
           {content.steps.map((step, index) => (
-            <motion.div
+            <div
               key={step.number}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7 }}
-              className={`flex flex-col items-center gap-8 rounded-3xl border border-card-border bg-card-bg p-6 sm:p-8 lg:p-10 ${
+              className={`flex flex-col items-center gap-8 rounded-3xl border border-card-border bg-card-bg p-6 sm:p-8 lg:p-10 transition-all duration-700 ${
                 index % 2 === 1 ? "lg:flex-row-reverse" : "lg:flex-row"
               }`}
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(40px)",
+                transition: "all 0.7s ease",
+                transitionDelay: `${index * 100}ms`,
+              }}
             >
               <div className="relative flex w-full shrink-0 justify-center lg:w-auto">
                 <div className="relative w-full max-w-[280px] overflow-hidden rounded-2xl bg-black">
@@ -98,7 +126,7 @@ export default function Method({ videos, content }: { videos: MethodVideos; cont
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

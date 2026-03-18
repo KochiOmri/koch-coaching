@@ -1,17 +1,6 @@
-/**
- * Hero — Landing section with video background, logo, headline, and CTA buttons.
- *
- * Renders the full-viewport hero: left-aligned content (logo, headline, subheadline, primary/secondary CTAs)
- * and a video on the right with gradient overlays. Uses theme detection (MutationObserver on document class)
- * to swap between dark/light logos. All text comes from the CMS via the `content` prop.
- *
- * CMS/Architecture: Receives `videoSrc` and `content` (headline, headlineAccent, subheadline, ctaText,
- * secondaryCtaText) from the page data layer. Video is configured separately from content.
- */
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { ArrowDown, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -25,52 +14,69 @@ interface HeroContent {
 
 export default function Hero({ videoSrc, content }: { videoSrc: string; content: HeroContent }) {
   const [isDark, setIsDark] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
     const check = () => setIsDark(!document.documentElement.classList.contains("light"));
     check();
     const observer = new MutationObserver(check);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    // Stagger content appearance for smooth load
+    requestAnimationFrame(() => setReady(true));
     return () => observer.disconnect();
   }, []);
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden transition-colors duration-300"
+      className="relative min-h-screen overflow-hidden"
       style={{ backgroundColor: "var(--hero-bg)" }}
     >
       <div className="absolute inset-0">
         <div className="absolute inset-0 z-[2]" style={{ background: "var(--hero-gradient-h)" }} />
         <div className="absolute inset-0 z-[2]" style={{ background: "var(--hero-gradient-v)" }} />
         <div className="flex h-full w-full items-center justify-end">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="h-full object-contain ml-auto"
-            style={{ maxHeight: "100vh" }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
+          {isMobile ? (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full object-contain ml-auto"
+              style={{ maxHeight: "100vh" }}
+            >
+              <source src={videoSrc} type="video/mp4" />
+            </video>
+          ) : (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full object-contain ml-auto"
+              style={{ maxHeight: "100vh" }}
+            >
+              <source src={videoSrc} type="video/mp4" />
+            </video>
+          )}
         </div>
       </div>
 
       <div className="relative z-10 flex min-h-screen items-center">
         <div className="mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-12">
           <div className="max-w-xl">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              className="flex flex-col items-start"
+            <div
+              className="flex flex-col items-start transition-all duration-700"
+              style={{ opacity: ready ? 1 : 0, transform: ready ? "scale(1)" : "scale(0.9)" }}
             >
               <Image
                 src={isDark ? "/logo-white.png" : "/logo-transparent.png"}
                 alt="KOCH Functional Patterns"
-                width={220}
-                height={220}
+                width={isMobile ? 150 : 220}
+                height={isMobile ? 150 : 220}
                 priority
               />
               <span
@@ -79,46 +85,56 @@ export default function Hero({ videoSrc, content }: { videoSrc: string; content:
               >
                 FUNCTIONAL PATTERNS
               </span>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-8 h-px w-40 origin-left bg-primary/60"
+            <div
+              className="mt-8 h-px w-40 origin-left transition-transform duration-700 delay-200"
+              style={{
+                backgroundColor: "var(--primary)",
+                opacity: 0.6,
+                transform: ready ? "scaleX(1)" : "scaleX(0)",
+              }}
             />
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-8 text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl"
-              style={{ fontFamily: "var(--font-outfit)", color: "var(--hero-text)" }}
+            <h1
+              className="mt-8 text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl transition-all duration-700 delay-300"
+              style={{
+                fontFamily: "var(--font-outfit)",
+                color: "var(--hero-text)",
+                opacity: ready ? 1 : 0,
+                transform: ready ? "translateY(0)" : "translateY(16px)",
+              }}
             >
               {content.headline}{" "}
-              <span className="text-primary">{content.headlineAccent}</span>
-            </motion.h1>
+              <span style={{ color: "var(--primary)" }}>{content.headlineAccent}</span>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.65 }}
-              className="mt-5 max-w-md text-sm leading-relaxed sm:text-base"
-              style={{ color: "var(--hero-text-sub)" }}
+            <p
+              className="mt-5 max-w-md text-sm leading-relaxed sm:text-base transition-all duration-700 delay-500"
+              style={{
+                color: "var(--hero-text-sub)",
+                opacity: ready ? 1 : 0,
+                transform: ready ? "translateY(0)" : "translateY(16px)",
+              }}
             >
               {content.subheadline}
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="mt-10 flex flex-wrap items-center gap-4"
+            <div
+              className="mt-10 flex flex-wrap items-center gap-4 transition-all duration-700 delay-700"
+              style={{
+                opacity: ready ? 1 : 0,
+                transform: ready ? "translateY(0)" : "translateY(16px)",
+              }}
             >
               <a
                 href="#book"
-                className="rounded-full bg-primary px-8 py-4 text-sm font-bold uppercase tracking-wider text-background transition-all duration-300 hover:bg-primary-dark hover:shadow-lg"
-                style={{ fontFamily: "var(--font-outfit)" }}
+                className="rounded-full px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-lg"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "var(--background)",
+                  fontFamily: "var(--font-outfit)",
+                }}
               >
                 {content.ctaText}
               </a>
@@ -128,29 +144,27 @@ export default function Hero({ videoSrc, content }: { videoSrc: string; content:
                 style={{ color: "var(--hero-text-sub)" }}
               >
                 <span
-                  className="flex h-11 w-11 items-center justify-center rounded-full border transition-all group-hover:border-primary group-hover:bg-primary/10"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border transition-all group-hover:border-primary"
                   style={{ borderColor: "var(--hero-btn-border)" }}
                 >
                   <Play size={14} className="ml-0.5" style={{ color: "var(--hero-text)" }} fill="var(--hero-text)" />
                 </span>
                 {content.secondaryCtaText}
               </a>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+      <div
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 transition-opacity duration-700 delay-1000"
+        style={{ opacity: ready ? 1 : 0 }}
       >
         <a href="#about" className="flex flex-col items-center gap-2" style={{ color: "var(--hero-scroll)" }}>
           <span className="text-[10px] tracking-[0.3em]">SCROLL</span>
           <ArrowDown size={14} className="animate-bounce" />
         </a>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -11,9 +11,13 @@
    - Checks for double-booking (same date + time)
    - Syncs with Google Calendar (if configured)
    - Returns the created appointment with its ID
+   
+   Data layer: Supabase when configured, JSON file fallback otherwise.
    ============================================================ */
 
 import { NextRequest, NextResponse } from "next/server";
+import { isSupabaseConfigured, getDb } from "@/lib/supabase/db";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import {
   getAllAppointments,
   getAppointmentsByDate,
@@ -24,19 +28,71 @@ import { createCalendarEvent } from "@/lib/google-calendar";
 import { sendBookingNotification, sendBookingConfirmation } from "@/lib/email";
 
 /* --- GET Handler ---
-   Returns appointments. Optionally filter by date.
-   Example: GET /api/appointments?date=2024-03-15 */
+   Returns appointments. Optionally filter by date or clientId.
+   Example: GET /api/appointments?date=2024-03-15
+   Example: GET /api/appointments?clientId=abc-123 (portal: client's appointments) */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const date = searchParams.get("date");
+    const clientId = searchParams.get("clientId");
 
-    if (date) {
-      const appointments = getAppointmentsByDate(date);
-      return NextResponse.json(appointments);
+    /* Resolve client email when filtering by clientId (for portal) */
+    let clientEmail: string | null = null;
+    if (clientId) {
+      if (isSupabaseConfigured()) {
+        const db = await getDb();
+        if (db) {
+          const { data: profile } = await db.from("profiles").select("email").eq("id", clientId).single();
+          if (profile?.email) {
+            clientEmail = profile.email;
+          }
+        }
+      }
+      if (!clientEmail) {
+        const { getClientById } = await import("@/lib/clients");
+        const client = getClientById(clientId);
+        if (client) clientEmail = client.email;
+      }
     }
 
-    const appointments = getAllAppointments();
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        let query = db.from("appointments").select("*");
+        if (date) {
+          query = query.eq("date", date);
+        }
+        const { data, error } = await query;
+        if (error) {
+          console.error("Supabase fetch error:", error);
+          return NextResponse.json(
+            { error: "Failed to fetch appointments" },
+            { status: 500 }
+          );
+        }
+        let result = (data ?? []) as Array<{ email?: string; client_email?: string }>;
+        if (clientEmail) {
+          result = result.filter(
+            (a) => (a.email || a.client_email || "").toLowerCase() === clientEmail!.toLowerCase()
+          );
+        }
+        return NextResponse.json(result);
+      }
+    }
+
+    /* Fallback: JSON file */
+    let appointments: ReturnType<typeof getAllAppointments>;
+    if (date) {
+      appointments = getAppointmentsByDate(date);
+    } else {
+      appointments = getAllAppointments();
+    }
+    if (clientEmail) {
+      appointments = appointments.filter(
+        (a) => a.email.toLowerCase() === clientEmail!.toLowerCase()
+      );
+    }
     return NextResponse.json(appointments);
   } catch (error) {
     console.error("Failed to fetch appointments:", error);
@@ -68,6 +124,12 @@ export async function GET(request: NextRequest) {
    4. Sync to Google Calendar
    5. Return the appointment */
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const { success } = rateLimit(`booking:${ip}`, { windowMs: 60_000, maxRequests: 5 });
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
+  }
+
   try {
     const body = await request.json();
 
@@ -83,7 +145,30 @@ export async function POST(request: NextRequest) {
     }
 
     /* Check for double-booking: is this time slot already taken? */
-    const bookedSlots = getBookedSlots(body.date);
+    let bookedSlots: string[];
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { data, error } = await db
+          .from("appointments")
+          .select("time")
+          .eq("date", body.date)
+          .neq("status", "cancelled");
+        if (error) {
+          console.error("Supabase booked slots fetch error:", error);
+          return NextResponse.json(
+            { error: "Failed to check availability" },
+            { status: 500 }
+          );
+        }
+        bookedSlots = (data ?? []).map((r: { time: string }) => r.time);
+      } else {
+        bookedSlots = getBookedSlots(body.date);
+      }
+    } else {
+      bookedSlots = getBookedSlots(body.date);
+    }
+
     if (bookedSlots.includes(body.time)) {
       return NextResponse.json(
         { error: "This time slot is already booked" },
@@ -92,21 +177,86 @@ export async function POST(request: NextRequest) {
     }
 
     /* Create the appointment in our data store */
-    const appointment = createAppointment({
-      date: body.date,
-      time: body.time,
-      name: body.name,
-      email: body.email,
-      phone: body.phone,
-      service: body.service,
-      message: body.message || "",
-    });
+    let appointment: {
+      id: string;
+      date: string;
+      time: string;
+      name: string;
+      email: string;
+      phone: string;
+      service: string;
+      message: string;
+      status: string;
+      createdAt: string;
+      googleEventId?: string;
+    };
+
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const row = {
+          id: crypto.randomUUID(),
+          date: body.date,
+          time: body.time,
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          service: body.service,
+          message: body.message || "",
+          status: "pending",
+          createdAt: new Date().toISOString(),
+        };
+        const { data, error } = await db
+          .from("appointments")
+          .insert(row)
+          .select()
+          .single();
+        if (error) {
+          console.error("Supabase insert error:", error);
+          return NextResponse.json(
+            { error: "Failed to create appointment" },
+            { status: 500 }
+          );
+        }
+        appointment = data as typeof appointment;
+      } else {
+        appointment = createAppointment({
+          date: body.date,
+          time: body.time,
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          service: body.service,
+          message: body.message || "",
+        });
+      }
+    } else {
+      appointment = createAppointment({
+        date: body.date,
+        time: body.time,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        service: body.service,
+        message: body.message || "",
+      });
+    }
 
     /* Sync to Google Calendar (non-blocking, won't fail the booking) */
-    const googleEventId = await createCalendarEvent(appointment);
+    const googleEventId = await createCalendarEvent(appointment as any);
     if (googleEventId) {
-      const { updateAppointment } = await import("@/lib/appointments");
-      updateAppointment(appointment.id, { googleEventId });
+      if (isSupabaseConfigured()) {
+        const db = await getDb();
+        if (db) {
+          await db
+            .from("appointments")
+            .update({ googleEventId })
+            .eq("id", appointment.id);
+        }
+      } else {
+        const { updateAppointment } = await import("@/lib/appointments");
+        updateAppointment(appointment.id, { googleEventId });
+      }
       appointment.googleEventId = googleEventId;
     }
 

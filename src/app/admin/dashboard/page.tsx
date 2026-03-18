@@ -83,10 +83,10 @@ function BookingsChart({ appointments }: { appointments: Appointment[] }) {
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
-      {[0, Math.ceil(maxCount / 2), maxCount].map((v) => {
+      {[0, Math.ceil(maxCount / 2), maxCount].map((v, idx) => {
         const y = padY + chartH - (v / maxCount) * chartH;
         return (
-          <g key={v}>
+          <g key={idx}>
             <line x1={padX} y1={y} x2={width - padX} y2={y} stroke="var(--card-border)" strokeWidth="1" />
             <text x={padX - 8} y={y + 4} textAnchor="end" fill="var(--muted)" fontSize="10">{v}</text>
           </g>

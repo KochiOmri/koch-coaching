@@ -10,7 +10,7 @@
  */
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Award, Users, Clock, Target } from "lucide-react";
 import LazyVideo from "./LazyVideo";
 
@@ -27,16 +27,37 @@ interface AboutContent {
 const defaultIcons = ["Users", "Clock", "Award", "Target"];
 
 export default function About({ videoSrc, content }: { videoSrc: string; content: AboutContent }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="about" className="relative py-24 sm:py-32" style={{ backgroundColor: "var(--section-alt)" }}>
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative py-24 sm:py-32"
+      style={{ backgroundColor: "var(--section-alt)" }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="flex justify-center"
+          <div
+            className="flex justify-center transition-all duration-700"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(20px)",
+            }}
           >
             <div className="relative w-full max-w-[360px] overflow-hidden rounded-3xl border border-card-border shadow-2xl shadow-primary/5">
               <LazyVideo
@@ -50,13 +71,14 @@ export default function About({ videoSrc, content }: { videoSrc: string; content
               />
               <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10" />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+          <div
+            className="transition-all duration-700 delay-100"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(20px)",
+            }}
           >
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">{content.tagline}</span>
             <h2
@@ -74,25 +96,26 @@ export default function About({ videoSrc, content }: { videoSrc: string; content
             <div className="mt-10 grid grid-cols-2 gap-4">
               {content.stats.map((stat, index) => {
                 const Icon = iconMap[defaultIcons[index]] || Award;
+                const delayClass = ["delay-0", "delay-100", "delay-200", "delay-300"][index] ?? "delay-0";
                 return (
-                  <motion.div
+                  <div
                     key={stat.label}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="rounded-2xl border border-card-border bg-card-bg p-5 text-center transition-all duration-300 hover:border-primary/30"
+                    className={`rounded-2xl border border-card-border bg-card-bg p-5 text-center transition-all duration-700 ${delayClass} hover:border-primary/30`}
+                    style={{
+                      opacity: visible ? 1 : 0,
+                      transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
+                    }}
                   >
                     <Icon size={24} className="mx-auto text-primary" />
                     <div className="mt-2 text-2xl font-extrabold" style={{ fontFamily: "var(--font-outfit)" }}>
                       {stat.value}
                     </div>
                     <div className="mt-1 text-xs text-muted">{stat.label}</div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

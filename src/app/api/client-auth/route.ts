@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json({
       authenticated: true,
-      client: { id: client.id, name: client.name, email: client.email },
+      client: { id: client.id, name: client.name, email: client.email, phone: client.phone || "" },
     });
   } catch {
     return NextResponse.json({ authenticated: false }, { status: 401 });

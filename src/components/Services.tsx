@@ -10,7 +10,7 @@
  */
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import { User, Users, Video, Check } from "lucide-react";
 
 const iconMap = [User, Users, Video];
@@ -29,15 +29,36 @@ interface ServicesContent {
 }
 
 export default function Services({ content }: { content: ServicesContent }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section id="services" className="relative py-24 sm:py-32">
+    <section id="services" ref={sectionRef} className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
+        <div
+          className="text-center transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(20px)",
+            transition: "all 0.7s ease",
+            transitionDelay: "0.2s",
+          }}
         >
           <span className="text-sm font-medium tracking-widest text-primary">
             {content.tagline}
@@ -51,18 +72,14 @@ export default function Services({ content }: { content: ServicesContent }) {
           <p className="mx-auto mt-4 max-w-2xl text-muted">
             {content.subheadline}
           </p>
-        </motion.div>
+        </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {content.items.map((service, index) => {
             const Icon = iconMap[index] || User;
             return (
-              <motion.div
+              <div
                 key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
                 className={`
                   group relative flex flex-col rounded-2xl border p-8
                   transition-all duration-300 hover:-translate-y-1
@@ -71,6 +88,12 @@ export default function Services({ content }: { content: ServicesContent }) {
                     : "border-card-border bg-card-bg hover:border-primary/50"
                   }
                 `}
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateY(0)" : "translateY(30px)",
+                  transition: "all 0.7s ease",
+                  transitionDelay: `${index * 100}ms`,
+                }}
               >
                 {service.featured && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-background">
@@ -110,7 +133,7 @@ export default function Services({ content }: { content: ServicesContent }) {
                     Book Now
                   </a>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

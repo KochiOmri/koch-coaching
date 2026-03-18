@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
+import { isSupabaseConfigured, getDb } from "@/lib/supabase/db";
 
 export interface IntakeSubmission {
   id: string;
@@ -42,8 +44,48 @@ function getAllSubmissions(): IntakeSubmission[] {
   return JSON.parse(data);
 }
 
+function mapRowToSubmission(row: Record<string, unknown>): IntakeSubmission {
+  return {
+    id: String(row.id),
+    name: String(row.name ?? ""),
+    email: String(row.email ?? ""),
+    phone: String(row.phone ?? ""),
+    age: String(row.age ?? ""),
+    occupation: String(row.occupation ?? ""),
+    painConditions: Array.isArray(row.pain_conditions) ? (row.pain_conditions as string[]) : [],
+    mainConcern: String(row.main_concern ?? ""),
+    previousInjuries: String(row.previous_injuries ?? ""),
+    surgeries: String(row.surgeries ?? ""),
+    currentMedications: String(row.current_medications ?? ""),
+    allergies: String(row.allergies ?? ""),
+    activityLevel: String(row.activity_level ?? ""),
+    hoursSitting: String(row.hours_sitting ?? ""),
+    exerciseFrequency: String(row.exercise_frequency ?? ""),
+    sportsActivities: String(row.sports_activities ?? ""),
+    goals: String(row.goals ?? ""),
+    consentAccepted: row.consent_accepted === true,
+    submittedAt: String(row.submitted_at ?? ""),
+  };
+}
+
 export async function GET() {
   try {
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { data, error } = await db.from("intake_forms").select("*");
+        if (error) {
+          console.error("Intake GET Supabase error:", error);
+          return NextResponse.json(
+            { error: "Failed to fetch intake forms" },
+            { status: 500 }
+          );
+        }
+        const submissions = (data ?? []).map((r) => mapRowToSubmission(r as Record<string, unknown>));
+        return NextResponse.json(submissions);
+      }
+    }
+
     const submissions = getAllSubmissions();
     return NextResponse.json(submissions);
   } catch (error) {
@@ -74,6 +116,43 @@ export async function POST(request: NextRequest) {
         { error: "Consent must be accepted" },
         { status: 400 }
       );
+    }
+
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const row = {
+          id: crypto.randomUUID(),
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          age: body.age,
+          occupation: body.occupation || "",
+          pain_conditions: body.painConditions,
+          main_concern: body.mainConcern || "",
+          previous_injuries: body.previousInjuries || "",
+          surgeries: body.surgeries || "",
+          current_medications: body.currentMedications || "",
+          allergies: body.allergies || "",
+          activity_level: body.activityLevel || "",
+          hours_sitting: body.hoursSitting || "",
+          exercise_frequency: body.exerciseFrequency || "",
+          sports_activities: body.sportsActivities || "",
+          goals: body.goals || "",
+          consent_accepted: body.consentAccepted,
+          submitted_at: new Date().toISOString(),
+        };
+        const { data, error } = await db.from("intake_forms").insert(row).select().single();
+        if (error) {
+          console.error("Intake POST Supabase error:", error);
+          return NextResponse.json(
+            { error: "Failed to save intake form" },
+            { status: 500 }
+          );
+        }
+        const newSubmission = mapRowToSubmission(data as Record<string, unknown>);
+        return NextResponse.json(newSubmission, { status: 201 });
+      }
     }
 
     const submissions = getAllSubmissions();

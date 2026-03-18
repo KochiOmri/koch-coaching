@@ -50,7 +50,7 @@ export default function WhatsAppButton({ phone, message }: { phone: string; mess
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        className="group flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-opacity duration-300 hover:opacity-90"
         style={{ backgroundColor: "#25D366" }}
         aria-label="Chat on WhatsApp"
       >

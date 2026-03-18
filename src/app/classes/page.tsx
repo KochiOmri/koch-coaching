@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { createClient } from "@/lib/supabase/client";
 import {
   Loader2,
   Users,
@@ -51,12 +52,10 @@ export default function ClassesPage() {
 
   useEffect(() => {
     fetchClasses();
-    fetch("/api/client-auth")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d?.client?.id) setClientId(d.client.id);
-      })
-      .catch(() => {});
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) setClientId(user.id);
+    }).catch(() => {});
   }, [fetchClasses]);
 
   const handleJoin = async (classId: string) => {

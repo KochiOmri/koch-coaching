@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { isSupabaseConfigured, getDb } from "@/lib/supabase/db";
 
 const DATA_PATH = path.join(process.cwd(), "data", "newsletter.json");
 
@@ -35,7 +36,28 @@ function saveSubscribers(subs: Array<{ email: string; subscribedAt: string }>) {
 }
 
 export async function GET() {
-  return NextResponse.json(getSubscribers());
+  try {
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { data, error } = await db.from("newsletter_subscribers").select("email, subscribed_at");
+        if (error) {
+          console.error("Newsletter GET Supabase error:", error);
+          return NextResponse.json({ error: "Failed to load subscribers" }, { status: 500 });
+        }
+        const subs = (data ?? []).map((r: Record<string, unknown>) => ({
+          email: String(r.email),
+          subscribedAt: String(r.subscribed_at ?? ""),
+        }));
+        return NextResponse.json(subs);
+      }
+    }
+
+    return NextResponse.json(getSubscribers());
+  } catch (error) {
+    console.error("Newsletter GET error:", error);
+    return NextResponse.json({ error: "Failed to load subscribers" }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -43,6 +65,36 @@ export async function POST(request: NextRequest) {
     const { email } = await request.json();
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+
+    if (isSupabaseConfigured()) {
+      const db = await getDb();
+      if (db) {
+        const { data: existing } = await db
+          .from("newsletter_subscribers")
+          .select("id")
+          .eq("email", email)
+          .maybeSingle();
+
+        if (existing) {
+          return NextResponse.json({ error: "Already subscribed" }, { status: 409 });
+        }
+
+        const { error } = await db.from("newsletter_subscribers").insert({
+          email,
+          subscribed_at: new Date().toISOString(),
+        });
+
+        if (error) {
+          if (error.code === "23505") {
+            return NextResponse.json({ error: "Already subscribed" }, { status: 409 });
+          }
+          console.error("Newsletter POST Supabase error:", error);
+          return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
+        }
+
+        return NextResponse.json({ success: true }, { status: 201 });
+      }
     }
 
     const subs = getSubscribers();

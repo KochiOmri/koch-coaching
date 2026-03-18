@@ -51,9 +51,9 @@ export default function PWAInstallPrompt() {
 
   return (
     <div
-      className="fixed bottom-4 left-4 right-4 z-50 flex items-center gap-3 rounded-2xl border p-4 shadow-2xl backdrop-blur-md md:left-auto md:right-6 md:max-w-sm"
+      className="fixed bottom-4 left-4 right-4 z-50 flex items-center gap-3 rounded-2xl border p-4 shadow-2xl md:left-auto md:right-6 md:max-w-sm"
       style={{
-        backgroundColor: "rgba(20, 20, 20, 0.95)",
+        backgroundColor: "rgba(20, 20, 20, 0.98)",
         borderColor: "var(--primary)",
       }}
     >

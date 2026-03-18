@@ -1,15 +1,6 @@
-/**
- * AdminSidebar — Admin panel navigation sidebar.
- *
- * Fixed sidebar with nav items for all admin pages (Dashboard, Appointments, Availability,
- * Videos, Content, Social Media, Marketing), theme toggle, View Website link, and logout.
- * Active route highlighted. Mobile: overlay + slide-in drawer.
- *
- * CMS/Architecture: No CMS. Nav items are static. Logout calls DELETE /api/auth and
- * redirects to /admin/login. Logo uses theme detection for dark/light variant.
- */
 "use client";
 
+import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -37,8 +28,12 @@ import {
   Sun,
   Moon,
   Gift,
+  Palette,
+  Loader2,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -49,6 +44,7 @@ const navItems = [
   { name: "Availability", href: "/admin/availability", icon: Clock },
   { name: "Videos", href: "/admin/videos", icon: Film },
   { name: "Media Library", href: "/admin/media", icon: FolderOpen },
+  { name: "Messages", href: "/admin/messages", icon: MessageCircle },
   { name: "Content", href: "/admin/content", icon: PenLine },
   { name: "WhatsApp", href: "/admin/whatsapp", icon: MessageCircle },
   { name: "Social Media", href: "/admin/social", icon: Share2 },
@@ -59,18 +55,26 @@ const navItems = [
   { name: "Group Classes", href: "/admin/group-classes", icon: Users },
   { name: "Referrals", href: "/admin/referrals", icon: Gift },
   { name: "Posture Analysis", href: "/admin/posture-analysis", icon: ScanLine },
+  { name: "Site Designer", href: "/admin/design", icon: Palette },
   { name: "Integrations", href: "/admin/integrations", icon: Plug },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, isAdmin, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
     setIsDark(!document.documentElement.classList.contains("light"));
   }, []);
+
+  useEffect(() => {
+    if (!loading && (!user || !isAdmin)) {
+      router.replace("/admin/login");
+    }
+  }, [loading, user, isAdmin, router]);
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -83,9 +87,30 @@ export default function AdminSidebar() {
   };
 
   const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
     await fetch("/api/auth", { method: "DELETE" });
     router.push("/admin/login");
   };
+
+  if (loading) {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        style={{ backgroundColor: "var(--background)" }}
+      >
+        <Loader2
+          size={32}
+          className="animate-spin"
+          style={{ color: "var(--primary)" }}
+        />
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null;
+  }
 
   const sidebarContent = (
     <div className="flex h-full flex-col">

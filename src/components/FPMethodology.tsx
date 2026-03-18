@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Activity, Search, Footprints, Link, CheckCircle } from "lucide-react";
 
 const iconMap: Record<string, typeof Activity> = {
@@ -30,13 +29,7 @@ export default function FPMethodology({ content }: { content: FPContentData }) {
       style={{ backgroundColor: "var(--background)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <span
             className="text-sm font-semibold uppercase tracking-[0.2em]"
             style={{ color: "var(--primary)" }}
@@ -55,18 +48,14 @@ export default function FPMethodology({ content }: { content: FPContentData }) {
           >
             {content.description}
           </p>
-        </motion.div>
+        </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-2">
-          {content.principles.map((principle, index) => {
+          {content.principles.map((principle) => {
             const Icon = iconMap[principle.icon] || Activity;
             return (
-              <motion.div
+              <div
                 key={principle.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group rounded-2xl border p-8 transition-all duration-300 hover:border-transparent"
                 style={{
                   backgroundColor: "var(--card-bg)",
@@ -92,16 +81,12 @@ export default function FPMethodology({ content }: { content: FPContentData }) {
                     {principle.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+        <div
           className="mt-16 rounded-2xl border p-8 md:p-12"
           style={{
             backgroundColor: "var(--card-bg)",
@@ -116,22 +101,15 @@ export default function FPMethodology({ content }: { content: FPContentData }) {
           </h3>
           <div className="grid gap-4 md:grid-cols-2">
             {content.evidence.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="flex items-start gap-3"
-              >
+              <div key={index} className="flex items-start gap-3">
                 <span className="mt-0.5 flex-shrink-0" style={{ color: "var(--primary)" }}>
                   <CheckCircle className="h-5 w-5" />
                 </span>
                 <span style={{ color: "var(--muted)" }}>{item}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

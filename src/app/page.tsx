@@ -27,9 +27,15 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
   const config = getVideoConfig();
-  const content = getSiteContent();
+  const content = await getSiteContent();
+
+  const contact = content.contact ?? {
+    instagramHandle: "",
+    whatsappNumber: "",
+    whatsappMessage: "",
+  };
 
   return (
     <>
@@ -43,13 +49,13 @@ export default function Home() {
         <Method videos={config.method} content={content.method} />
         <BeforeAfterSlider />
         <Results videos={config.results} testimonials={content.testimonials} />
-        <InstagramFeed handle={content.contact.instagramHandle} />
+        <InstagramFeed handle={contact.instagramHandle} />
         <BookingForm />
       </main>
-      <Footer content={content.contact} />
+      <Footer content={contact} />
       <WhatsAppButton
-        phone={content.contact.whatsappNumber}
-        message={content.contact.whatsappMessage}
+        phone={contact.whatsappNumber}
+        message={contact.whatsappMessage}
       />
       <PWAInstallPrompt />
     </>
