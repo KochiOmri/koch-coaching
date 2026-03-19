@@ -43,6 +43,7 @@ export default function ClientLogin() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback?next=/portal/dashboard`,
+          queryParams: { prompt: "select_account" },
         },
       });
       if (error) setError(error.message);
