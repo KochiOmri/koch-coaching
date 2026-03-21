@@ -59,10 +59,11 @@ function AdminLogin() {
     setError("");
     try {
       const supabase = createClient();
+      localStorage.setItem("auth_redirect", "/admin/dashboard");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/admin/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: { prompt: "select_account" },
         },
       });

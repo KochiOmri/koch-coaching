@@ -39,10 +39,11 @@ export default function ClientLogin() {
     setError("");
     try {
       const supabase = createClient();
+      localStorage.setItem("auth_redirect", "/portal/dashboard");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/portal/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: { prompt: "select_account" },
         },
       });
