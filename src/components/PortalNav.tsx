@@ -31,7 +31,7 @@ const navItems = [
 export default function PortalNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const [isDark, setIsDark] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -108,9 +108,12 @@ export default function PortalNav() {
               </a>
             );
           })}
+          <span className="ml-2 hidden truncate text-xs lg:inline" style={{ color: "var(--muted)", maxWidth: 140 }}>
+            {profile?.name || user?.email?.split("@")[0]}
+          </span>
           <button
             onClick={handleLogout}
-            className="ml-2 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:opacity-70"
+            className="ml-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:opacity-70"
             style={{ color: "var(--muted)" }}
           >
             <LogOut size={16} />
@@ -147,6 +150,14 @@ export default function PortalNav() {
               </a>
             );
           })}
+          <div className="mt-2 rounded-lg px-3 py-2" style={{ backgroundColor: "var(--card-bg)" }}>
+            <p className="truncate text-xs font-medium" style={{ color: "var(--foreground)" }}>
+              {profile?.name || user?.email?.split("@")[0]}
+            </p>
+            <p className="truncate text-[11px]" style={{ color: "var(--muted)" }}>
+              {user?.email}
+            </p>
+          </div>
           <button
             onClick={handleLogout}
             className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm text-red-500"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -30,12 +30,13 @@ import {
   Gift,
   Palette,
   Loader2,
+  GripVertical,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
 
-const navItems = [
+const DEFAULT_NAV_ITEMS = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Appointments", href: "/admin/appointments", icon: CalendarDays },
   { name: "Clients", href: "/admin/clients", icon: Users },
@@ -59,16 +60,48 @@ const navItems = [
   { name: "Integrations", href: "/admin/integrations", icon: Plug },
 ];
 
+const NAV_MAP = Object.fromEntries(DEFAULT_NAV_ITEMS.map((item) => [item.href, item]));
+
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAdmin, loading } = useAuth();
+  const { user, profile, isAdmin, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const [navItems, setNavItems] = useState(DEFAULT_NAV_ITEMS);
+  const dragItem = useRef<number | null>(null);
+  const dragOver = useRef<number | null>(null);
 
   useEffect(() => {
     setIsDark(!document.documentElement.classList.contains("light"));
+    fetch("/api/nav-order")
+      .then((r) => r.json())
+      .then((order: string[]) => {
+        if (Array.isArray(order) && order.length > 0) {
+          const ordered = order
+            .map((href) => NAV_MAP[href])
+            .filter(Boolean);
+          const missing = DEFAULT_NAV_ITEMS.filter((i) => !order.includes(i.href));
+          setNavItems([...ordered, ...missing]);
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (dragItem.current === null || dragOver.current === null) return;
+    const items = [...navItems];
+    const dragged = items.splice(dragItem.current, 1)[0];
+    items.splice(dragOver.current, 0, dragged);
+    dragItem.current = null;
+    dragOver.current = null;
+    setNavItems(items);
+    fetch("/api/nav-order", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items.map((i) => i.href)),
+    }).catch(() => {});
+  }, [navItems]);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -136,29 +169,51 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {navItems.map((item) => {
+        {navItems.map((item, idx) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
           return (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
-                isActive ? "text-background" : "hover:text-foreground"
-              }`}
-              style={{
-                backgroundColor: isActive ? "var(--primary)" : "transparent",
-                color: isActive ? "var(--background)" : "var(--muted)",
-              }}
+            <div
+              key={item.href}
+              draggable
+              onDragStart={() => { dragItem.current = idx; }}
+              onDragEnter={() => { dragOver.current = idx; }}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => e.preventDefault()}
+              className="group/drag"
             >
-              <item.icon size={18} />
-              {item.name}
-            </a>
+              <a
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                  isActive ? "text-background" : "hover:text-foreground"
+                }`}
+                style={{
+                  backgroundColor: isActive ? "var(--primary)" : "transparent",
+                  color: isActive ? "var(--background)" : "var(--muted)",
+                }}
+              >
+                <GripVertical
+                  size={14}
+                  className="shrink-0 cursor-grab opacity-0 transition-opacity group-hover/drag:opacity-40"
+                />
+                <item.icon size={18} className="shrink-0" />
+                {item.name}
+              </a>
+            </div>
           );
         })}
       </nav>
 
       <div className="border-t px-3 py-4" style={{ borderColor: "var(--card-border)" }}>
+        {/* Logged-in user identity */}
+        <div className="mb-3 rounded-xl px-4 py-3" style={{ backgroundColor: "var(--background)" }}>
+          <p className="truncate text-xs font-semibold" style={{ color: "var(--foreground)" }}>
+            {profile?.name || user?.email?.split("@")[0] || "Admin"}
+          </p>
+          <p className="truncate text-[11px]" style={{ color: "var(--muted)" }}>
+            {user?.email}
+          </p>
+        </div>
         <button
           onClick={toggleTheme}
           className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"

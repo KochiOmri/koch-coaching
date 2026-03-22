@@ -65,19 +65,18 @@ export async function GET(request: NextRequest) {
         }
         const { data, error } = await query;
         if (error) {
-          console.error("Supabase fetch error:", error);
-          return NextResponse.json(
-            { error: "Failed to fetch appointments" },
-            { status: 500 }
-          );
+          console.error("Supabase appointments fetch error:", error);
         }
-        let result = (data ?? []) as Array<{ email?: string; client_email?: string }>;
-        if (clientEmail) {
-          result = result.filter(
-            (a) => (a.email || a.client_email || "").toLowerCase() === clientEmail!.toLowerCase()
-          );
+        if (!error && data) {
+          let result = data as Array<Record<string, unknown>>;
+          if (clientEmail) {
+            result = result.filter((a) => {
+              const email = String(a.email || a.client_email || "").toLowerCase();
+              return email === clientEmail!.toLowerCase();
+            });
+          }
+          return NextResponse.json(result);
         }
-        return NextResponse.json(result);
       }
     }
 
@@ -195,7 +194,6 @@ export async function POST(request: NextRequest) {
       const db = await getDb();
       if (db) {
         const row = {
-          id: crypto.randomUUID(),
           date: body.date,
           time: body.time,
           name: body.name,
@@ -204,7 +202,6 @@ export async function POST(request: NextRequest) {
           service: body.service,
           message: body.message || "",
           status: "pending",
-          createdAt: new Date().toISOString(),
         };
         const { data, error } = await db
           .from("appointments")
@@ -212,13 +209,32 @@ export async function POST(request: NextRequest) {
           .select()
           .single();
         if (error) {
-          console.error("Supabase insert error:", error);
-          return NextResponse.json(
-            { error: "Failed to create appointment" },
-            { status: 500 }
-          );
+          console.error("Supabase appointment insert error:", error);
         }
-        appointment = data as typeof appointment;
+        if (!error && data) {
+          appointment = {
+            id: data.id,
+            date: data.date,
+            time: data.time,
+            name: data.name || data.client_name || body.name,
+            email: data.email || data.client_email || body.email,
+            phone: data.phone || data.client_phone || body.phone,
+            service: data.service,
+            message: data.message || data.notes || "",
+            status: data.status,
+            createdAt: data.created_at || new Date().toISOString(),
+          };
+        } else {
+          appointment = createAppointment({
+            date: body.date,
+            time: body.time,
+            name: body.name,
+            email: body.email,
+            phone: body.phone,
+            service: body.service,
+            message: body.message || "",
+          });
+        }
       } else {
         appointment = createAppointment({
           date: body.date,
