@@ -45,11 +45,7 @@ export default function AdminMessagesPage() {
 
   useEffect(() => scrollToBottom(), [messages, scrollToBottom]);
 
-  useEffect(() => {
-    loadThreads();
-  }, []);
-
-  async function loadThreads() {
+  const loadThreads = useCallback(async () => {
     try {
       const res = await fetch("/api/messages?admin=true");
       if (res.ok) {
@@ -58,7 +54,11 @@ export default function AdminMessagesPage() {
       }
     } catch { /* ignore */ }
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    loadThreads();
+  }, [loadThreads]);
 
   async function loadMessages(clientId: string) {
     try {

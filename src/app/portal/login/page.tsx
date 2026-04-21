@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { ensureClientProfile } from "@/lib/ensure-profile";
+import { emitAuthRefresh } from "@/lib/auth-events";
 
 type Tab = "login" | "register";
 
@@ -16,6 +18,7 @@ export default function ClientLogin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [isDark, setIsDark] = useState(true);
@@ -24,14 +27,26 @@ export default function ClientLogin() {
   useEffect(() => {
     setIsDark(!document.documentElement.classList.contains("light"));
 
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        router.replace("/portal/dashboard");
-      } else {
-        setCheckingSession(false);
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (user) {
+          router.replace("/portal/dashboard");
+          return;
+        }
+      } catch {
+        /* ignore */
       }
-    });
+      if (!cancelled) setCheckingSession(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   async function handleGoogleLogin() {
@@ -40,10 +55,11 @@ export default function ClientLogin() {
     try {
       const supabase = createClient();
       localStorage.setItem("auth_redirect", "/portal/dashboard");
+      const next = encodeURIComponent("/portal/dashboard");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
           queryParams: { prompt: "select_account" },
         },
       });
@@ -58,12 +74,13 @@ export default function ClientLogin() {
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
     setLoading(true);
     try {
       const supabase = createClient();
 
       if (tab === "register") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error: signErr } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -71,22 +88,33 @@ export default function ClientLogin() {
             emailRedirectTo: `${window.location.origin}/auth/callback?next=/portal/dashboard`,
           },
         });
-        if (error) {
-          setError(error.message);
-        } else {
-          setError("");
-          alert("Check your email for a confirmation link!");
+        if (signErr) {
+          setError(signErr.message);
+          return;
         }
+        if (data.session?.user) {
+          await ensureClientProfile(supabase, data.session.user, name);
+          emitAuthRefresh();
+          router.push("/portal/dashboard");
+          return;
+        }
+        setSuccessMessage(
+          "Account created. Check your email for the confirmation link, then sign in here."
+        );
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error: signErr } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-        if (error) {
-          setError(error.message);
-        } else {
-          router.push("/portal/dashboard");
+        if (signErr) {
+          setError(signErr.message);
+          return;
         }
+        if (data.user) {
+          await ensureClientProfile(supabase, data.user);
+          emitAuthRefresh();
+        }
+        router.push("/portal/dashboard");
       }
     } catch {
       setError("Network error. Please try again.");
@@ -98,6 +126,7 @@ export default function ClientLogin() {
   const switchTab = (t: Tab) => {
     setTab(t);
     setError("");
+    setSuccessMessage("");
     setName("");
     setEmail("");
     setPassword("");
@@ -245,6 +274,9 @@ export default function ClientLogin() {
             </div>
 
             {error && <p className="text-sm text-red-500">{error}</p>}
+            {successMessage && (
+              <p className="text-sm text-green-600 dark:text-green-400">{successMessage}</p>
+            )}
 
             <button
               type="submit"

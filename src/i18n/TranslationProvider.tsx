@@ -37,14 +37,16 @@ function resolve(obj: Record<string, unknown>, path: string): string {
 }
 
 export function TranslationProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem("locale") as Locale | null;
+      if (stored === "he" || stored === "en") return stored;
+    }
+    return "en";
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("locale") as Locale | null;
-    if (stored === "he" || stored === "en") {
-      setLocaleState(stored);
-    }
     setMounted(true);
   }, []);
 

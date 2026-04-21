@@ -66,11 +66,26 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile, isAdmin, loading } = useAuth();
+  const [legacyChecked, setLegacyChecked] = useState(false);
+  const [legacyAdmin, setLegacyAdmin] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [navItems, setNavItems] = useState(DEFAULT_NAV_ITEMS);
   const dragItem = useRef<number | null>(null);
   const dragOver = useRef<number | null>(null);
+
+  const hasAdminAccess = (user && isAdmin) || legacyAdmin;
+  const authLoading = loading || !legacyChecked;
+
+  useEffect(() => {
+    fetch("/api/auth")
+      .then((r) => r.json())
+      .then((d: { authenticated?: boolean }) => {
+        setLegacyAdmin(!!d.authenticated);
+      })
+      .catch(() => {})
+      .finally(() => setLegacyChecked(true));
+  }, []);
 
   useEffect(() => {
     setIsDark(!document.documentElement.classList.contains("light"));
@@ -104,10 +119,10 @@ export default function AdminSidebar() {
   }, [navItems]);
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) {
+    if (!authLoading && !hasAdminAccess) {
       router.replace("/admin/login");
     }
-  }, [loading, user, isAdmin, router]);
+  }, [authLoading, hasAdminAccess, router]);
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -126,7 +141,7 @@ export default function AdminSidebar() {
     router.push("/admin/login");
   };
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center"
@@ -141,7 +156,7 @@ export default function AdminSidebar() {
     );
   }
 
-  if (!user || !isAdmin) {
+  if (!hasAdminAccess) {
     return null;
   }
 
@@ -211,7 +226,7 @@ export default function AdminSidebar() {
             {profile?.name || user?.email?.split("@")[0] || "Admin"}
           </p>
           <p className="truncate text-[11px]" style={{ color: "var(--muted)" }}>
-            {user?.email}
+            {user?.email || (legacyAdmin ? "Password sign-in" : "")}
           </p>
         </div>
         <button

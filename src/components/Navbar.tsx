@@ -12,10 +12,17 @@ const navLinks = [
   { name: "Contact", href: "#contact" },
 ];
 
+const portalLinks = [
+  { name: "Client Portal", href: "/portal/login" },
+  { name: "Admin", href: "/admin/login" },
+];
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() =>
+    typeof window !== 'undefined' ? !document.documentElement.classList.contains("light") : true
+  );
   const ticking = useRef(false);
 
   useEffect(() => {
@@ -28,7 +35,6 @@ export default function Navbar() {
       });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    setIsDark(!document.documentElement.classList.contains("light"));
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -62,6 +68,16 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-sm tracking-wide transition-colors duration-200"
+                style={{ color: "var(--muted)", fontFamily: "var(--font-outfit)" }}
+              >
+                {link.name}
+              </a>
+            ))}
+            {portalLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
@@ -119,6 +135,17 @@ export default function Navbar() {
         >
           <div className="space-y-1 px-4 py-4">
             {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="block rounded-lg px-4 py-3 text-sm transition-colors"
+                style={{ color: "var(--muted)" }}
+                onClick={() => setIsOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            {portalLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}

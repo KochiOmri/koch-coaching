@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { Lock, Eye, EyeOff, Loader2, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -33,25 +34,49 @@ function AdminLogin() {
       setError("Authentication failed. Please try again.");
     }
 
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        setCheckingSession(false);
-        return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const r = await fetch("/api/auth");
+        const session = await r.json();
+        if (!cancelled && session?.authenticated) {
+          router.replace("/admin/dashboard");
+          return;
+        }
+      } catch {
+        /* ignore */
       }
-      supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single()
-        .then(({ data: profile }) => {
-          if (profile?.role === "admin") {
-            router.replace("/admin/dashboard");
-          } else {
-            setCheckingSession(false);
-          }
-        });
-    });
+
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (!user) {
+          setCheckingSession(false);
+          return;
+        }
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (cancelled) return;
+        if (profile?.role === "admin") {
+          router.replace("/admin/dashboard");
+          return;
+        }
+      } catch {
+        /* ignore */
+      }
+      if (!cancelled) setCheckingSession(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [searchParams, router]);
 
   async function handleGoogleLogin() {
@@ -60,10 +85,11 @@ function AdminLogin() {
     try {
       const supabase = createClient();
       localStorage.setItem("auth_redirect", "/admin/dashboard");
+      const next = encodeURIComponent("/admin/dashboard");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
           queryParams: { prompt: "select_account" },
         },
       });
@@ -228,13 +254,13 @@ function AdminLogin() {
         </div>
 
         <div className="mt-6 text-center">
-          <a
+          <Link
             href="/"
             className="text-sm transition-colors hover:underline"
             style={{ color: "var(--muted)" }}
           >
             &larr; Back to website
-          </a>
+          </Link>
         </div>
       </div>
     </div>

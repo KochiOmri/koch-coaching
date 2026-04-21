@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useState } from "react";
@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
+import { ensureClientProfile } from "@/lib/ensure-profile";
+import { emitAuthRefresh } from "@/lib/auth-events";
 
 const navItems = [
   { name: "Dashboard", href: "/portal/dashboard", icon: LayoutDashboard },
@@ -34,6 +36,7 @@ export default function PortalNav() {
   const { user, profile, loading } = useAuth();
   const [isDark, setIsDark] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const profileEnsureAttempted = useRef<string | null>(null);
 
   useEffect(() => {
     setIsDark(!document.documentElement.classList.contains("light"));
@@ -44,6 +47,22 @@ export default function PortalNav() {
       router.replace("/portal/login");
     }
   }, [loading, user, router]);
+
+  useEffect(() => {
+    if (loading || !user?.id || profile) return;
+    if (profileEnsureAttempted.current === user.id) return;
+    profileEnsureAttempted.current = user.id;
+    let cancelled = false;
+    (async () => {
+      const supabase = createClient();
+      await ensureClientProfile(supabase, user);
+      if (!cancelled) emitAuthRefresh();
+    })();
+    return () => {
+      cancelled = true;
+      profileEnsureAttempted.current = null;
+    };
+  }, [loading, user, profile]);
 
   async function handleLogout() {
     const supabase = createClient();

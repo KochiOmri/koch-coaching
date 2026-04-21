@@ -6,7 +6,13 @@
    ============================================================ */
 
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPassword, SESSION_TOKEN } from "@/lib/auth";
+import { verifyPassword, SESSION_TOKEN, isAuthenticated } from "@/lib/auth";
+
+/** Returns whether the legacy admin password cookie session is active. */
+export async function GET() {
+  const authenticated = await isAuthenticated();
+  return NextResponse.json({ authenticated });
+}
 
 /* --- Login Handler ---
    Verifies password and sets a session cookie. */

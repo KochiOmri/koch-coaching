@@ -68,7 +68,8 @@ export default function VideoShowcase({ videos }: { videos: ShowcaseVideo[] }) {
 
   useEffect(() => {
     if (lightboxSrc) {
-      requestAnimationFrame(() => setIsLightboxVisible(true));
+      const timer = requestAnimationFrame(() => setIsLightboxVisible(true));
+      return () => cancelAnimationFrame(timer);
     } else {
       setIsLightboxVisible(false);
     }
