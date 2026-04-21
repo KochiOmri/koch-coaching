@@ -1,0 +1,38 @@
+============================================
+  🎯 KOCH COACHING PLATFORM - DEMO ACCESS
+============================================
+
+Share this with your friends!
+
+📱 LIVE WEBSITE
+https://koch-coaching.vercel.app
+
+👤 DEMO LOGIN
+URL: https://koch-coaching.vercel.app/portal/login
+Email: demo@koch-coaching.com
+Password: Demo2024!
+
+✨ FEATURES TO TRY
+• View training programs
+• Browse exercise library
+• Track your progress
+• Book appointments
+• Message with coach
+• See before/after transformations
+
+💪 ABOUT
+Biomechanics coaching platform built on Functional Patterns methodology.
+Addresses root cause of pain - not just symptoms.
+
+📞 CONTACT
+WhatsApp: +972 54-619-7111
+Email: omrikochman@gmail.com
+Location: Israel
+
+🛠️ TECH STACK
+Next.js 16 | Supabase | Tailwind CSS
+Real-time messaging | AI posture analysis
+
+============================================
+   Built by Omri Kochman with Claude Code
+============================================
