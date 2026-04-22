@@ -12,7 +12,7 @@ create table if not exists public.clients (
   email text not null unique,
   password text not null, -- hashed password
   phone text default '',
-  created_at text not null,
+  "createdAt" text not null, -- Use camelCase to match application code
   programs text[] default '{}',
 
   -- Timestamps for tracking
