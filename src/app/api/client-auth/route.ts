@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Name, email, and password are required" }, { status: 400 });
       }
       try {
-        const client = createClient({ name, email, password });
+        const client = await createClient({ name, email, password });
         const token = Buffer.from(JSON.stringify({ id: client.id, ts: Date.now() })).toString("base64");
         const response = NextResponse.json({ success: true, client: { id: client.id, name: client.name, email: client.email } });
         response.cookies.set(CLIENT_SESSION, token, {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       if (!email || !password) {
         return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
       }
-      const client = verifyClientPassword(email, password);
+      const client = await verifyClientPassword(email, password);
       if (!client) {
         return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
       }
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     }
     const payload = JSON.parse(Buffer.from(cookie.value, "base64").toString());
     const { getClientById } = await import("@/lib/clients");
-    const client = getClientById(payload.id);
+    const client = await getClientById(payload.id);
     if (!client) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }

@@ -159,6 +159,17 @@ echo "⏳ Waiting 90 seconds for deployment to complete..."
 sleep 90
 
 echo ""
+echo "📊 Setting up Supabase database..."
+echo ""
+echo "⚠️  IMPORTANT: You need to run this SQL in Supabase SQL Editor:"
+echo "   1. Go to: https://supabase.com/dashboard/project/adpfjvazlykuravwrhtu/sql"
+echo "   2. Copy and paste the contents of: supabase/create-clients-table.sql"
+echo "   3. Click 'Run'"
+echo ""
+echo "Press Enter when you've done this..."
+read -r
+
+echo ""
 echo "👤 Creating demo account..."
 
 # Create demo account via registration

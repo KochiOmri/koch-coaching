@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { getDb } from "./supabase/db";
 
 export interface Exercise {
   id: string;
@@ -38,11 +39,16 @@ const CLIENTS_FILE = path.join(DATA_DIR, "clients.json");
 const PROGRAMS_FILE = path.join(DATA_DIR, "programs.json");
 
 function ensureFile(filePath: string): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+    }
+  } catch (error) {
+    // In production (Vercel), filesystem is read-only, that's OK
+    console.log("Filesystem is read-only, using Supabase");
   }
 }
 
@@ -52,25 +58,56 @@ function hashPassword(password: string): string {
 
 // ── Clients ──
 
-export function getAllClients(): Client[] {
-  ensureFile(CLIENTS_FILE);
-  return JSON.parse(fs.readFileSync(CLIENTS_FILE, "utf-8"));
-}
+export async function getAllClients(): Promise<Client[]> {
+  const db = await getDb();
 
-export function getClientById(id: string): Client | undefined {
-  return getAllClients().find((c) => c.id === id);
-}
-
-export function getClientByEmail(email: string): Client | undefined {
-  return getAllClients().find((c) => c.email.toLowerCase() === email.toLowerCase());
-}
-
-export function createClient(data: { name: string; email: string; password: string; phone?: string }): Client {
-  const clients = getAllClients();
-
-  if (clients.some((c) => c.email.toLowerCase() === data.email.toLowerCase())) {
-    throw new Error("A client with this email already exists");
+  if (db) {
+    // Use Supabase in production
+    const { data, error } = await db.from("clients").select("*");
+    if (error) {
+      console.error("Error fetching clients from Supabase:", error);
+      return [];
+    }
+    return (data as Client[]) || [];
   }
+
+  // Fallback to filesystem in dev
+  ensureFile(CLIENTS_FILE);
+  try {
+    return JSON.parse(fs.readFileSync(CLIENTS_FILE, "utf-8"));
+  } catch {
+    return [];
+  }
+}
+
+export async function getClientById(id: string): Promise<Client | undefined> {
+  const db = await getDb();
+
+  if (db) {
+    const { data, error } = await db.from("clients").select("*").eq("id", id).single();
+    if (error) return undefined;
+    return data as Client;
+  }
+
+  const clients = await getAllClients();
+  return clients.find((c) => c.id === id);
+}
+
+export async function getClientByEmail(email: string): Promise<Client | undefined> {
+  const db = await getDb();
+
+  if (db) {
+    const { data, error } = await db.from("clients").select("*").ilike("email", email).single();
+    if (error) return undefined;
+    return data as Client;
+  }
+
+  const clients = await getAllClients();
+  return clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
+}
+
+export async function createClient(data: { name: string; email: string; password: string; phone?: string }): Promise<Client> {
+  const db = await getDb();
 
   const client: Client = {
     id: crypto.randomUUID(),
@@ -82,24 +119,66 @@ export function createClient(data: { name: string; email: string; password: stri
     programs: [],
   };
 
+  if (db) {
+    // Use Supabase in production
+    const existing = await getClientByEmail(data.email);
+    if (existing) {
+      throw new Error("A client with this email already exists");
+    }
+
+    const { data: inserted, error } = await db.from("clients").insert(client).select().single();
+    if (error) {
+      console.error("Error creating client in Supabase:", error);
+      throw new Error("Failed to create client: " + error.message);
+    }
+    return inserted as Client;
+  }
+
+  // Fallback to filesystem in dev
+  const clients = await getAllClients();
+  if (clients.some((c) => c.email.toLowerCase() === data.email.toLowerCase())) {
+    throw new Error("A client with this email already exists");
+  }
+
   clients.push(client);
-  fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+  try {
+    fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+  } catch (error) {
+    console.error("Error writing to filesystem:", error);
+    throw new Error("Failed to create client - filesystem not writable");
+  }
   return client;
 }
 
-export function verifyClientPassword(email: string, password: string): Client | null {
-  const client = getClientByEmail(email);
+export async function verifyClientPassword(email: string, password: string): Promise<Client | null> {
+  const client = await getClientByEmail(email);
   if (!client) return null;
   if (client.password !== hashPassword(password)) return null;
   return client;
 }
 
-export function updateClient(id: string, updates: Partial<Client>): Client | null {
-  const clients = getAllClients();
+export async function updateClient(id: string, updates: Partial<Client>): Promise<Client | null> {
+  const db = await getDb();
+
+  if (db) {
+    const { data, error } = await db.from("clients").update(updates).eq("id", id).select().single();
+    if (error) {
+      console.error("Error updating client in Supabase:", error);
+      return null;
+    }
+    return data as Client;
+  }
+
+  const clients = await getAllClients();
   const idx = clients.findIndex((c) => c.id === id);
   if (idx === -1) return null;
   clients[idx] = { ...clients[idx], ...updates };
-  fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+
+  try {
+    fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+  } catch {
+    return null;
+  }
   return clients[idx];
 }
 
