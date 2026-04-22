@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       }
       if (!clientEmail) {
         const { getClientById } = await import("@/lib/clients");
-        const client = getClientById(clientId);
+        const client = await getClientById(clientId);
         if (client) clientEmail = client.email;
       }
     }

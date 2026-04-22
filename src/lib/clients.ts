@@ -197,7 +197,7 @@ export function getClientPrograms(clientId: string): Program[] {
   return getAllPrograms().filter((p) => p.assignedTo.includes(clientId));
 }
 
-export function createProgram(data: Omit<Program, "id" | "createdAt">): Program {
+export async function createProgram(data: Omit<Program, "id" | "createdAt">): Promise<Program> {
   const programs = getAllPrograms();
   const program: Program = {
     ...data,
@@ -205,11 +205,16 @@ export function createProgram(data: Omit<Program, "id" | "createdAt">): Program 
     createdAt: new Date().toISOString(),
   };
   programs.push(program);
-  fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(programs, null, 2));
+
+  try {
+    fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(programs, null, 2));
+  } catch {
+    // Filesystem may be read-only in production
+  }
 
   // Also add program id to each assigned client's programs array
   if (data.assignedTo.length > 0) {
-    const clients = getAllClients();
+    const clients = await getAllClients();
     let changed = false;
     for (const client of clients) {
       if (data.assignedTo.includes(client.id) && !client.programs.includes(program.id)) {
@@ -218,25 +223,35 @@ export function createProgram(data: Omit<Program, "id" | "createdAt">): Program 
       }
     }
     if (changed) {
-      fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+      // Update clients if possible
+      try {
+        fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+      } catch {
+        // Filesystem may be read-only in production
+      }
     }
   }
 
   return program;
 }
 
-export function updateProgram(id: string, updates: Partial<Program>): Program | null {
+export async function updateProgram(id: string, updates: Partial<Program>): Promise<Program | null> {
   const programs = getAllPrograms();
   const idx = programs.findIndex((p) => p.id === id);
   if (idx === -1) return null;
 
   const oldAssigned = programs[idx].assignedTo;
   programs[idx] = { ...programs[idx], ...updates };
-  fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(programs, null, 2));
+
+  try {
+    fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(programs, null, 2));
+  } catch {
+    // Filesystem may be read-only in production
+  }
 
   // Sync client program arrays when assignedTo changes
   if (updates.assignedTo) {
-    const clients = getAllClients();
+    const clients = await getAllClients();
     let changed = false;
     for (const client of clients) {
       const wasAssigned = oldAssigned.includes(client.id);
@@ -250,21 +265,30 @@ export function updateProgram(id: string, updates: Partial<Program>): Program | 
       }
     }
     if (changed) {
-      fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+      try {
+        fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+      } catch {
+        // Filesystem may be read-only in production
+      }
     }
   }
 
   return programs[idx];
 }
 
-export function deleteProgram(id: string): boolean {
+export async function deleteProgram(id: string): Promise<boolean> {
   const programs = getAllPrograms();
   const filtered = programs.filter((p) => p.id !== id);
   if (filtered.length === programs.length) return false;
-  fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(filtered, null, 2));
+
+  try {
+    fs.writeFileSync(PROGRAMS_FILE, JSON.stringify(filtered, null, 2));
+  } catch {
+    // Filesystem may be read-only in production
+  }
 
   // Remove program from all clients
-  const clients = getAllClients();
+  const clients = await getAllClients();
   let changed = false;
   for (const client of clients) {
     if (client.programs.includes(id)) {
@@ -273,7 +297,11 @@ export function deleteProgram(id: string): boolean {
     }
   }
   if (changed) {
-    fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+    try {
+      fs.writeFileSync(CLIENTS_FILE, JSON.stringify(clients, null, 2));
+    } catch {
+      // Filesystem may be read-only in production
+    }
   }
 
   return true;

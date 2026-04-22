@@ -30,7 +30,8 @@ export async function GET() {
       }
     }
 
-    const clients = getAllClients().map((c) => ({
+    const allClients = await getAllClients();
+    const clients = allClients.map((c) => ({
       id: c.id,
       name: c.name,
       email: c.email,

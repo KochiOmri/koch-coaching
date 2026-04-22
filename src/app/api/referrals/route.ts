@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
         }
       }
       if (!clientEmailAddr) {
-        const client = getClientById(clientId);
+        const client = await getClientById(clientId);
         if (!client) {
           return NextResponse.json({ error: "Client not found" }, { status: 404 });
         }
