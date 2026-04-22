@@ -97,9 +97,18 @@ export async function getClientByEmail(email: string): Promise<Client | undefine
   const db = await getDb();
 
   if (db) {
-    const { data, error } = await db.from("clients").select("*").ilike("email", email).single();
-    if (error) return undefined;
-    return data as Client;
+    // Use eq with lowercased email, and maybeSingle to avoid error when no rows found
+    const { data, error } = await db
+      .from("clients")
+      .select("*")
+      .eq("email", email.toLowerCase())
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching client by email:", error);
+      return undefined;
+    }
+    return data as Client | undefined;
   }
 
   const clients = await getAllClients();
@@ -121,17 +130,24 @@ export async function createClient(data: { name: string; email: string; password
 
   if (db) {
     // Use Supabase in production
-    const existing = await getClientByEmail(data.email);
-    if (existing) {
-      throw new Error("A client with this email already exists");
-    }
+    try {
+      const existing = await getClientByEmail(data.email);
+      if (existing) {
+        throw new Error("A client with this email already exists");
+      }
 
-    const { data: inserted, error } = await db.from("clients").insert(client).select().single();
-    if (error) {
-      console.error("Error creating client in Supabase:", error);
-      throw new Error("Failed to create client: " + error.message);
+      const { data: inserted, error } = await db.from("clients").insert(client).select().single();
+      if (error) {
+        console.error("Error creating client in Supabase:", error);
+        console.error("Error details:", JSON.stringify(error, null, 2));
+        throw new Error("Failed to create client: " + error.message);
+      }
+      console.log("Client created successfully:", inserted);
+      return inserted as Client;
+    } catch (err) {
+      console.error("Create client error:", err);
+      throw err;
     }
-    return inserted as Client;
   }
 
   // Fallback to filesystem in dev
