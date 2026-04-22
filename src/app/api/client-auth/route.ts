@@ -55,7 +55,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error) {
     console.error("Client auth error:", error);
-    return NextResponse.json({ error: "Authentication failed" }, { status: 500 });
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack");
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({
+      error: "Authentication failed",
+      details: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 
